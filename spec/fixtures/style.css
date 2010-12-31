@@ -1,0 +1,63 @@
+/*
+ * A Comment at the top of my file
+ * /
+body {
+  background: black url(../images/background.jpg) fixed;
+  color: #333333;
+  margin: 0;
+}
+
+#logo {
+  position: absolute;
+  top: 5px;
+  left: 5px;
+  z-index: 100;
+}
+
+#container {
+  position: relative;
+  background: rgba(255, 255, 255, 0.75);
+  width: 900px;
+  margin-top: 125px;
+  -moz-box-shadow: 1px 1px 5px #333333;
+  -webkit-box-shadow: 1px 1px 5px #333333;
+  box-shadow: 1px 1px 5px #333333;
+}
+
+#content {
+  padding: 30px 10px 20px 20px;
+}
+
+#menu {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
+#menu ul {
+  margin: 0;
+  list-style: none;
+  margin-top: 4px;
+}
+
+#menu ul li {
+  float: left;
+}
+
+#menu ul li a {
+  padding: 4px 6px;
+  text-decoration: none;
+  color: black;
+  font-weight: bold;
+  font-size: 120%;
+}
+
+/*Hidden selector*/
+/*#menu ul li.selected {*/
+/*  color: red;*/
+/*}*/
+
+#menu ul li a:hover {
+  background: rgba(0, 0, 0, 0.5);
+  color: white;
+}

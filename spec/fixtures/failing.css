@@ -1,0 +1,12 @@
+/*
+ * A Comment at the top of my file
+ * /
+body {
+  background: black url(../images/background.jpg) fixed;
+
+#logo {
+  position: absolute;
+  top: 5px;
+  left: 5px;
+  z-index: 100;
+}
