@@ -25,6 +25,13 @@ module CSS
       'border-color' => 'black'
     }
 
+    DEFAULT_MARGIN_PROPERTIES = {
+      'margin-top' => nil,
+      'margin-right' => nil,
+      'margin-bottom' => nil,
+      'margin-left' => nil
+    }
+
     attr_reader :selector
 
     def initialize(selector, rules)
@@ -39,6 +46,8 @@ module CSS
         compact_font_property
       elsif %w(border outline border-left border-right border-top border-bottom).include?(property_name)
         compact_border_property(property_name)
+      elsif %w(margin padding).include?(property_name)
+        compact_margin_property(property_name)
       else
         @rules[normalize_property_name(property_name)]
       end
@@ -62,9 +71,19 @@ module CSS
         properties -= DEFAULT_FONT_PROPERTIES.keys
         properties << 'font'
       end
-      if (properties & DEFAULT_BORDER_PROPERTIES.keys).size > 0
-        properties -= DEFAULT_BORDER_PROPERTIES.keys
-        properties << 'border'
+      %w(border outline border-left border-right border-top border-bottom).each do |prop|
+        default_properties = DEFAULT_BORDER_PROPERTIES.keys.map { |p| p.sub(/^border/, prop) }
+        if (properties & default_properties).size > 0
+          properties -= default_properties
+          properties << prop
+        end
+      end
+      %w(margin padding).each do |prop|
+        default_properties = DEFAULT_MARGIN_PROPERTIES.keys.map { |p| p.sub(/^margin/, prop) }
+        if (properties & default_properties).size > 0
+          properties -= default_properties
+          properties << prop
+        end
       end
       properties
     end
@@ -107,6 +126,8 @@ module CSS
           expand_font_property value
         elsif %w(border outline border-left border-right border-top border-bottom).include?(name)
           expand_border_property name, value
+        elsif %w(margin padding).include?(name)
+          expand_margin_property name, value
         else
           {name => value}
         end
@@ -193,6 +214,42 @@ module CSS
         properties
       end
 
+      def expand_margin_property(prefix, value)
+        properties = DEFAULT_MARGIN_PROPERTIES.inject({}) { |hash, prop| hash[prop[0].sub(/^margin/, prefix)] = prop[1]; hash }
+
+        values = value.split(/\s+/)
+
+        top, right, bottom, left = 0, 0, 0, 0
+        if values.size == 1
+          top = values[0]
+          right = values[0]
+          bottom = values[0]
+          left = values[0]
+        elsif values.size == 2
+          top = values[0]
+          bottom = values[0]
+          left = values[1]
+          right = values[1]
+        elsif values.size == 3
+          top = values[0]
+          bottom = values[2]
+          left = values[1]
+          right = values[1]
+        else
+          top = values[0]
+          right = values[1]
+          bottom = values[2]
+          left = values[3]
+        end
+
+        properties["#{prefix}-top"] = top
+        properties["#{prefix}-right"] = right
+        properties["#{prefix}-bottom"] = bottom
+        properties["#{prefix}-left"] = left
+
+        properties
+      end
+
       def compact_background_property
         %w(background-color background-image background-repeat background-position background-attachment).map { |prop| @rules[prop] != DEFAULT_BACKGROUND_PROPERTIES[prop] ? @rules[prop] : nil }.compact.join(' ')
       end
@@ -213,6 +270,25 @@ module CSS
 
       def compact_border_property(prefix)
         %w(size style color).map { |p| "#{prefix}-#{p}" }.map { |prop| @rules[prop] != DEFAULT_BORDER_PROPERTIES[prop] ? @rules[prop] : nil }.compact.join(' ')
+      end
+
+      def compact_margin_property(prefix)
+        top = @rules["#{prefix}-top"]
+        right = @rules["#{prefix}-right"]
+        bottom = @rules["#{prefix}-bottom"]
+        left = @rules["#{prefix}-left"]
+
+        if top && right && bottom && left
+          if [top, right, bottom, left] == Array.new(4) { top }
+            top
+          elsif [top, bottom] == Array.new(2) { top } && [left, right] == Array.new(2) { left }
+            [top, left].join(' ')
+          elsif [top, bottom] != Array.new(2) { top } && [left, right] == Array.new(2) { left }
+            [top, left, bottom].join(' ')
+          else
+            [top, right, bottom, left].join(' ')
+          end
+        end
       end
   end
 end

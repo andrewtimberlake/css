@@ -206,6 +206,98 @@ module CSS
           end
         end
       end
+
+      %w(margin padding).each do |property|
+        context "#{property} property" do
+          context "with all property values" do
+            let(:rule) { Rule.new('#id', "#{property}: 2px 3px 4px 5px;") }
+
+            context "referencing long-hand properties" do
+              it "should return the #{property}-top" do
+                rule["#{property}_top"].should == '2px'
+              end
+
+              it "should return the #{property}-right" do
+                rule["#{property}_right"].should == '3px'
+              end
+
+              it "should return the #{property}-bottom" do
+                rule["#{property}_bottom"].should == '4px'
+              end
+
+              it "should return the #{property}-left" do
+                rule["#{property}_left"].should == '5px'
+              end
+            end
+          end
+
+          context "with 3 property values" do
+            let(:rule) { Rule.new('#id', "#{property}: 3px 4px 5px;") }
+
+            context "referencing long-hand properties" do
+              it "should return the #{property}-top" do
+                rule["#{property}_top"].should == '3px'
+              end
+
+              it "should return the #{property}-right" do
+                rule["#{property}_right"].should == '4px'
+              end
+
+              it "should return the #{property}-bottom" do
+                rule["#{property}_bottom"].should == '5px'
+              end
+
+              it "should return the #{property}-left" do
+                rule["#{property}_left"].should == '4px'
+              end
+            end
+          end
+
+          context "with 2 property values" do
+            let(:rule) { Rule.new('#id', "#{property}: 4px 5px;") }
+
+            context "referencing long-hand properties" do
+              it "should return the #{property}-top" do
+                rule["#{property}_top"].should == '4px'
+              end
+
+              it "should return the #{property}-right" do
+                rule["#{property}_right"].should == '5px'
+              end
+
+              it "should return the #{property}-bottom" do
+                rule["#{property}_bottom"].should == '4px'
+              end
+
+              it "should return the #{property}-left" do
+                rule["#{property}_left"].should == '5px'
+              end
+            end
+          end
+
+          context "with 1 property value" do
+            let(:rule) { Rule.new('#id', "#{property}: 5px;") }
+
+            context "referencing long-hand properties" do
+              it "should return the #{property}-top" do
+                rule["#{property}_top"].should == '5px'
+              end
+
+              it "should return the #{property}-right" do
+                rule["#{property}_right"].should == '5px'
+              end
+
+              it "should return the #{property}-bottom" do
+                rule["#{property}_bottom"].should == '5px'
+              end
+
+              it "should return the #{property}-left" do
+                rule["#{property}_left"].should == '5px'
+              end
+            end
+          end
+        end
+      end
     end
 
     context "Compacting CSS properties" do
@@ -231,6 +323,40 @@ module CSS
 
           it "should return a short-hand version of the #{property} property" do
             rule[property].should == '1em dotted rgba(127, 255, 64, 0.5)'
+          end
+        end
+      end
+
+      %w(margin padding).each do |property|
+        context "#{property} property with different values" do
+          let(:rule) { Rule.new('#id', "#{property}-left: 1em; #{property}-top: 2em; #{property}-right: 4em; #{property}-bottom: 3em;") }
+
+          it "should return a short-hand version of the #{property} property" do
+            rule[property].should == '2em 4em 3em 1em'
+          end
+        end
+
+        context "#{property} property with the same values" do
+          let(:rule) { Rule.new('#id', "#{property}-left: 1em; #{property}-top: 1em; #{property}-right: 1em; #{property}-bottom: 1em;") }
+
+          it "should return a short-hand version of the #{property} property" do
+            rule[property].should == '1em'
+          end
+        end
+
+        context "#{property} property with the same values for top, bottom and left, right" do
+          let(:rule) { Rule.new('#id', "#{property}-left: 1em; #{property}-top: 2em; #{property}-right: 1em; #{property}-bottom: 2em;") }
+
+          it "should return a short-hand version of the #{property} property" do
+            rule[property].should == '2em 1em'
+          end
+        end
+
+        context "#{property} property with the same values for left and right" do
+          let(:rule) { Rule.new('#id', "#{property}-left: 1em; #{property}-top: 3em; #{property}-right: 1em; #{property}-bottom: 2em;") }
+
+          it "should return a short-hand version of the #{property} property" do
+            rule[property].should == '3em 1em 2em'
           end
         end
       end
