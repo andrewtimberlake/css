@@ -33,12 +33,12 @@ module CSS
     end
 
     def get(property_name)
-      if property_name.to_sym == :background
+      if property_name == 'background'
         compact_background_property
-      elsif property_name.to_sym == :font
+      elsif property_name == 'font'
         compact_font_property
-      elsif property_name.to_sym == :border
-        compact_border_property
+      elsif %w(border outline border-left border-right border-top border-bottom).include?(property_name)
+        compact_border_property(property_name)
       else
         @rules[normalize_property_name(property_name)]
       end
@@ -105,8 +105,8 @@ module CSS
           expand_background_property value
         elsif name == 'font'
           expand_font_property value
-        elsif name == 'border'
-          expand_border_property value
+        elsif %w(border outline border-left border-right border-top border-bottom).include?(name)
+          expand_border_property name, value
         else
           {name => value}
         end
@@ -172,23 +172,23 @@ module CSS
         properties
       end
 
-      def expand_border_property(value)
-        properties = DEFAULT_BORDER_PROPERTIES.clone
+      def expand_border_property(prefix, value)
+        properties = DEFAULT_BORDER_PROPERTIES.inject({}) { |hash, prop| hash[prop[0].sub(/^border/, prefix)] = prop[1]; hash }
 
         values = value.split(/\s+/)
 
         val = values.pop
         if val =~ /^(#|rgb)/ || Colors::NAMES.include?(val.upcase)
-          properties['border-color'] = val
+          properties["#{prefix}-color"] = val
         else
           values << val
         end
 
         val = values.pop
-        properties['border-style'] = val if val
+        properties["#{prefix}-style"] = val if val
 
         val = values.pop
-        properties['border-size'] = val if val
+        properties["#{prefix}-size"] = val if val
 
         properties
       end
@@ -211,8 +211,8 @@ module CSS
         end.compact.join(' ')
       end
 
-      def compact_border_property
-        %w(border-size border-style border-color).map { |prop| @rules[prop] != DEFAULT_BORDER_PROPERTIES[prop] ? @rules[prop] : nil }.compact.join(' ')
+      def compact_border_property(prefix)
+        %w(size style color).map { |p| "#{prefix}-#{p}" }.map { |prop| @rules[prop] != DEFAULT_BORDER_PROPERTIES[prop] ? @rules[prop] : nil }.compact.join(' ')
       end
   end
 end

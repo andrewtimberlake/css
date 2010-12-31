@@ -149,57 +149,59 @@ module CSS
         end
       end
 
-      context "border property" do
-        context "with all property values" do
-          let(:rule) { Rule.new('#id', 'border: 2px solid red;') }
+      %w(border outline border-left border-right border-top border-right).each do |property|
+        context "#{property} property" do
+          context "with all property values" do
+            let(:rule) { Rule.new('#id', "#{property}: 2px solid red;") }
 
-          context "referencing long-hand properties" do
-            it "should return the border size" do
-              rule.border_size.should == '2px'
-            end
+            context "referencing long-hand properties" do
+              it "should return the #{property} size" do
+                rule["#{property}_size"].should == '2px'
+              end
 
-            it "should return the border style" do
-              rule.border_style.should == 'solid'
-            end
+              it "should return the #{property} style" do
+                rule["#{property}_style"].should == 'solid'
+              end
 
-            it "should return the border color" do
-              rule.border_color.should == 'red'
-            end
-          end
-        end
-
-        context "with only size and style" do
-          let(:rule) { Rule.new('#id', 'border: 5em dotted;') }
-
-          context "referencing long-hand properties" do
-            it "should return the border size" do
-              rule.border_size.should == '5em'
-            end
-
-            it "should return the border style" do
-              rule.border_style.should == 'dotted'
-            end
-
-            it "should return the border color" do
-              rule.border_color.should == 'black'
+              it "should return the #{property} color" do
+                rule["#{property}_color"].should == 'red'
+              end
             end
           end
-        end
 
-        context "with only style" do
-          let(:rule) { Rule.new('#id', 'border: dashed;') }
+          context "with only size and style" do
+            let(:rule) { Rule.new('#id', "#{property}: 5em dotted;") }
 
-          context "referencing long-hand properties" do
-            it "should return the border size" do
-              rule.border_size.should == '3px'
+            context "referencing long-hand properties" do
+              it "should return the #{property} size" do
+                rule["#{property}_size"].should == '5em'
+              end
+
+              it "should return the #{property} style" do
+                rule["#{property}_style"].should == 'dotted'
+              end
+
+              it "should return the #{property} color" do
+                rule["#{property}_color"].should == 'black'
+              end
             end
+          end
 
-            it "should return the border style" do
-              rule.border_style.should == 'dashed'
-            end
+          context "with only style" do
+            let(:rule) { Rule.new('#id', "#{property}: dashed;") }
 
-            it "should return the border color" do
-              rule.border_color.should == 'black'
+            context "referencing long-hand properties" do
+              it "should return the #{property} size" do
+                rule["#{property}_size"].should == '3px'
+              end
+
+              it "should return the #{property} style" do
+                rule["#{property}_style"].should == 'dashed'
+              end
+
+              it "should return the #{property} color" do
+                rule["#{property}_color"].should == 'black'
+              end
             end
           end
         end
@@ -223,11 +225,13 @@ module CSS
         end
       end
 
-      context "border property" do
-        let(:rule) { Rule.new('#id', 'border-size: 1em; border-style: dotted; border-color: rgba(127, 255, 64, 0.5);') }
+      %w(border outline border-left border-right border-top border-right).each do |property|
+        context "#{property} property" do
+          let(:rule) { Rule.new('#id', "#{property}-size: 1em; #{property}-style: dotted; #{property}-color: rgba(127, 255, 64, 0.5);") }
 
-        it "should return a short-hand version of the border property" do
-          rule.border.should == '1em dotted rgba(127, 255, 64, 0.5)'
+          it "should return a short-hand version of the #{property} property" do
+            rule[property].should == '1em dotted rgba(127, 255, 64, 0.5)'
+          end
         end
       end
     end
