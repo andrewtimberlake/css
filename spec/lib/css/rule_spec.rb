@@ -17,7 +17,7 @@ module CSS
     end
 
     it "should allow referencing a hyphenated property by camel-case method name" do
-      rule.backgroundColor.should == '#333'
+      rule.background_color.should == '#333'
     end
 
     context "Expanding CSS shorthand" do
@@ -27,23 +27,23 @@ module CSS
 
           context "referencing long-hand properties" do
             it "should return the background color" do
-              rule.backgroundColor.should == '#FFF'
+              rule.background_color.should == '#FFF'
             end
 
             it "should return the background image" do
-              rule.backgroundImage.should == 'url(image.png)'
+              rule.background_image.should == 'url(image.png)'
             end
 
             it "should return the background repeat" do
-              rule.backgroundRepeat.should == 'no-repeat'
+              rule.background_repeat.should == 'no-repeat'
             end
 
             it "should return the background position" do
-              rule.backgroundPosition.should == '20px 100px'
+              rule.background_position.should == '20px 100px'
             end
 
             it "should return the background attachment" do
-              rule.backgroundAttachment.should == 'fixed'
+              rule.background_attachment.should == 'fixed'
             end
           end
         end
@@ -53,23 +53,23 @@ module CSS
 
           context "referencing long-hand properties" do
             it "should return the background color" do
-              rule.backgroundColor.should == 'transparent'
+              rule.background_color.should == 'transparent'
             end
 
             it "should return the background image" do
-              rule.backgroundImage.should == 'url(image.png)'
+              rule.background_image.should == 'url(image.png)'
             end
 
             it "should return the background repeat" do
-              rule.backgroundRepeat.should == 'repeat'
+              rule.background_repeat.should == 'repeat'
             end
 
             it "should return the background position" do
-              rule.backgroundPosition.should == '20px 100px'
+              rule.background_position.should == '20px 100px'
             end
 
             it "should return the background attachment" do
-              rule.backgroundAttachment.should == 'inherit'
+              rule.background_attachment.should == 'inherit'
             end
           end
         end
@@ -79,7 +79,71 @@ module CSS
 
           context "referencing long-hand properties" do
             it "should return the background color" do
-              rule.backgroundColor.should == 'black'
+              rule.background_color.should == 'black'
+            end
+          end
+        end
+      end
+
+      context "font property" do
+        context "with all property values" do
+          let(:rule) { Rule.new('#id', 'font: italic small-caps bold 1em/1.2em georgia,"times new roman",serif;') }
+
+          context "referencing long-hand properties" do
+            it "should return the font style" do
+              rule.font_style.should == 'italic'
+            end
+
+            it "should return the font variant" do
+              rule.font_variant.should == 'small-caps'
+            end
+
+            it "should return the font weight" do
+              rule.font_weight.should == 'bold'
+            end
+
+            it "should return the font size" do
+              rule.font_size.should == '1em'
+            end
+
+            it "should returbn the line height" do
+              rule.line_height.should == '1.2em'
+            end
+
+            it "should return the font family" do
+              rule.font_family.should == 'georgia,"times new roman",serif'
+            end
+          end
+        end
+
+        context "with only font size and font family" do
+          let(:rule) { Rule.new('#id', 'font: 12px arial;') }
+
+          context "referencing long-hand properties" do
+            it "should return the font size" do
+              rule.font_size.should == '12px'
+            end
+
+            it "should return the font family" do
+              rule.font_family.should == 'arial'
+            end
+          end
+        end
+
+        context "with only only property other than font size and font family" do
+          let(:rule) { Rule.new('#id', 'font: inherit 80% georgia,"times roman",sans-serif;') }
+
+          context "referencing long-hand properties" do
+            it "should return the font size" do
+              rule.font_size.should == '80%'
+            end
+
+            it "should return the font family" do
+              rule.font_family.should == 'georgia,"times roman",sans-serif'
+            end
+
+            it "should return the font style" do
+              rule.font_style.should == 'inherit'
             end
           end
         end
@@ -92,6 +156,14 @@ module CSS
 
         it "should return a short-hand version of the background property" do
           rule.background.should == 'url(image.png) top center inherit'
+        end
+      end
+
+      context "font property" do
+        let(:rule) { Rule.new('#id', 'font-size: 12em; font-weight: bold; font-family: arial; line-height: 1.2em') }
+
+        it "should return a short-hand version of the background property" do
+          rule.font.should == 'bold 12em/1.2em arial'
         end
       end
     end

@@ -3,12 +3,20 @@ module CSS
   class Rule
     include Colors
 
-    DEFAULT_BACKGROUND_RULES = {
+    DEFAULT_BACKGROUND_PROPERTIES = {
       'background-color' => 'transparent',
       'background-image' => 'none',
       'background-repeat' => 'repeat',
       'background-position' => 'top left',
       'background-attachment' => 'scroll'
+    }
+
+    DEFAULT_FONT_PROPERTIES = {
+      'font-style' => 'normal',
+      'font-variant' => 'normal',
+      'font-weight' => 'normal',
+      'font-size' => 'inherit',
+      'font-family' => 'inherit'
     }
 
     attr_reader :selector
@@ -19,8 +27,10 @@ module CSS
     end
 
     def get(property_name)
-      if [:background].include?(property_name.to_sym)
+      if property_name.to_sym == :background
         compact_background_property
+      elsif property_name.to_sym == :font
+        compact_font_property
       else
         @rules[normalize_property_name(property_name)]
       end
@@ -36,9 +46,13 @@ module CSS
 
     def normalized_properties
       properties = @properties.clone
-      if properties & DEFAULT_BACKGROUND_RULES.keys
-        properties -= DEFAULT_BACKGROUND_RULES.keys
+      if (properties & DEFAULT_BACKGROUND_PROPERTIES.keys).size > 0
+        properties -= DEFAULT_BACKGROUND_PROPERTIES.keys
         properties << 'background'
+      end
+      if (properties & DEFAULT_FONT_PROPERTIES.keys).size > 0
+        properties -= DEFAULT_FONT_PROPERTIES.keys
+        properties << 'font'
       end
       properties
     end
@@ -67,6 +81,8 @@ module CSS
           name.to_s.gsub(/([A-Z])/) do |match|
             "-#{match.downcase}"
           end
+        elsif name.to_s =~ /_/
+          name.to_s.gsub(/_/, '-')
         else
           name.to_s
         end
@@ -75,13 +91,15 @@ module CSS
       def expand_property(name, value)
         if name == 'background'
           expand_background_property value
+        elsif name == 'font'
+          expand_font_property value
         else
           {name => value}
         end
       end
 
       def expand_background_property(value)
-        properties = DEFAULT_BACKGROUND_RULES.clone
+        properties = DEFAULT_BACKGROUND_PROPERTIES.clone
         values = value.split(/\s+/)
         while values.size > 0
           val = values.shift
@@ -107,8 +125,55 @@ module CSS
         properties
       end
 
+      def expand_font_property(value)
+        properties = DEFAULT_FONT_PROPERTIES.clone
+        font_families = value.split(/,/)
+        values = font_families.shift.split(/\s+/)
+
+        font_families.unshift values.pop
+        properties['font-family'] = font_families.join(',')
+
+        val = values.pop
+        font_size, line_height = val.split(/\//)
+        properties['font-size'] = font_size
+        properties['line-height'] = line_height if line_height
+
+        val = values.shift
+        if val =~ /(inherit|italic|oblique)/
+          properties['font-style'] = val
+        else
+          values << val
+        end
+
+        val = values.shift
+        if val =~ /(inherit|small-caps)/
+          properties['font-variant'] = val
+        else
+          values << val
+        end
+
+        val = values.shift
+        properties['font-weight'] = val if val
+
+        properties
+      end
+
       def compact_background_property
-        %w(background-color background-image background-repeat background-position background-attachment).map { |prop| @rules[prop] != DEFAULT_BACKGROUND_RULES[prop] ? @rules[prop] : nil }.compact.join(' ')
+        %w(background-color background-image background-repeat background-position background-attachment).map { |prop| @rules[prop] != DEFAULT_BACKGROUND_PROPERTIES[prop] ? @rules[prop] : nil }.compact.join(' ')
+      end
+
+      def compact_font_property
+        %w(font-style font-variant font-weight font-size font-family).map do |prop|
+          if @rules[prop] != DEFAULT_FONT_PROPERTIES[prop]
+            if prop == 'font-size' && @rules['line-height']
+              [@rules[prop], @rules['line-height']].join('/')
+            else
+              @rules[prop]
+            end
+          else
+            nil
+          end
+        end.compact.join(' ')
       end
   end
 end
