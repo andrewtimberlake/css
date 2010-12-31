@@ -298,6 +298,62 @@ module CSS
           end
         end
       end
+
+      context "list-style property" do
+        context "with all property values" do
+          let(:rule) { Rule.new('#id', "list-style: square inside url(image.png);") }
+
+          context "referencing long-hand properties" do
+            it "should return the list-style-type" do
+              rule.list_style_type.should == 'square'
+            end
+
+            it "should return the list-style-position" do
+              rule.list_style_position.should == 'inside'
+            end
+
+            it "should return the list-style-image" do
+              rule.list_style_image.should == 'url(image.png)'
+            end
+          end
+        end
+
+        context "with just type and style" do
+          let(:rule) { Rule.new('#id', "list-style: square inside;") }
+
+          context "referencing long-hand properties" do
+            it "should return the list-style-type" do
+              rule.list_style_type.should == 'square'
+            end
+
+            it "should return the list-style-position" do
+              rule.list_style_position.should == 'inside'
+            end
+
+            it "should return the list-style-image" do
+              rule.list_style_image.should == 'none'
+            end
+          end
+        end
+
+        context "with just style" do
+          let(:rule) { Rule.new('#id', "list-style: square inside;") }
+
+          context "referencing long-hand properties" do
+            it "should return the list-style-type" do
+              rule.list_style_type.should == 'square'
+            end
+
+            it "should return the list-style-position" do
+              rule.list_style_position.should == 'inside'
+            end
+
+            it "should return the list-style-image" do
+              rule.list_style_image.should == 'none'
+            end
+          end
+        end
+      end
     end
 
     context "Compacting CSS properties" do
@@ -357,6 +413,32 @@ module CSS
 
           it "should return a short-hand version of the #{property} property" do
             rule[property].should == '3em 1em 2em'
+          end
+        end
+
+        context "#{property} property with missing top and right" do
+          let(:rule) { Rule.new('#id', "#{property}-left: 1em; #{property}-bottom: 2em;") }
+
+          it "should return a short-hand version of the #{property} property" do
+            rule[property].should be_nil
+          end
+        end
+      end
+
+      context "list-style property" do
+        context "with all property values" do
+          let(:rule) { Rule.new('#id', 'list-style-position: inside; list-style-type: square; list-style-image: url(image.png)') }
+
+          it "should return a short-hand version of the list-style property" do
+            rule.list_style.should == 'square inside url(image.png)'
+          end
+        end
+
+        context "with just type and position" do
+          let(:rule) { Rule.new('#id', 'list-style-position: inside; list-style-type: square;') }
+
+          it "should return a short-hand version of the list-style property" do
+            rule.list_style.should == 'square inside'
           end
         end
       end

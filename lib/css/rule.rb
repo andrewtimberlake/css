@@ -32,6 +32,12 @@ module CSS
       'margin-left' => nil
     }
 
+    DEFAULT_LIST_STYLE_PROPERTIES = {
+      'list-style-type' => 'disc',
+      'list-style-position' => 'outside',
+      'list-style-image' => 'none'
+    }
+
     attr_reader :selector
 
     def initialize(selector, rules)
@@ -48,6 +54,8 @@ module CSS
         compact_border_property(property_name)
       elsif %w(margin padding).include?(property_name)
         compact_margin_property(property_name)
+      elsif property_name == 'list-style'
+        compact_list_style_property
       else
         @rules[normalize_property_name(property_name)]
       end
@@ -84,6 +92,10 @@ module CSS
           properties -= default_properties
           properties << prop
         end
+      end
+      if (properties & DEFAULT_LIST_STYLE_PROPERTIES.keys).size > 0
+        properties -= DEFAULT_LIST_STYLE_PROPERTIES.keys
+        properties << 'list-style'
       end
       properties
     end
@@ -128,6 +140,8 @@ module CSS
           expand_border_property name, value
         elsif %w(margin padding).include?(name)
           expand_margin_property name, value
+        elsif name == 'list-style'
+          expand_list_style_property value
         else
           {name => value}
         end
@@ -250,6 +264,22 @@ module CSS
         properties
       end
 
+      def expand_list_style_property(value)
+        properties = DEFAULT_LIST_STYLE_PROPERTIES.clone
+        values = value.split(/\s+/)
+        while values.size > 0
+          val = values.shift
+          if val =~ /^url/
+            properties['list-style-image'] = val
+          elsif val =~ /^(inside|outside)/
+            properties['list-style-position'] = val
+          else
+            properties['list-style-type'] = val
+          end
+        end
+        properties
+      end
+
       def compact_background_property
         %w(background-color background-image background-repeat background-position background-attachment).map { |prop| @rules[prop] != DEFAULT_BACKGROUND_PROPERTIES[prop] ? @rules[prop] : nil }.compact.join(' ')
       end
@@ -289,6 +319,10 @@ module CSS
             [top, right, bottom, left].join(' ')
           end
         end
+      end
+
+      def compact_list_style_property
+        %w(list-style-type list-style-position list-style-image).map { |prop| @rules[prop] != DEFAULT_BACKGROUND_PROPERTIES[prop] ? @rules[prop] : nil }.compact.join(' ')
       end
   end
 end
