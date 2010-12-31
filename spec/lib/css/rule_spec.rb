@@ -148,6 +148,62 @@ module CSS
           end
         end
       end
+
+      context "border property" do
+        context "with all property values" do
+          let(:rule) { Rule.new('#id', 'border: 2px solid red;') }
+
+          context "referencing long-hand properties" do
+            it "should return the border size" do
+              rule.border_size.should == '2px'
+            end
+
+            it "should return the border style" do
+              rule.border_style.should == 'solid'
+            end
+
+            it "should return the border color" do
+              rule.border_color.should == 'red'
+            end
+          end
+        end
+
+        context "with only size and style" do
+          let(:rule) { Rule.new('#id', 'border: 5em dotted;') }
+
+          context "referencing long-hand properties" do
+            it "should return the border size" do
+              rule.border_size.should == '5em'
+            end
+
+            it "should return the border style" do
+              rule.border_style.should == 'dotted'
+            end
+
+            it "should return the border color" do
+              rule.border_color.should == 'black'
+            end
+          end
+        end
+
+        context "with only style" do
+          let(:rule) { Rule.new('#id', 'border: dashed;') }
+
+          context "referencing long-hand properties" do
+            it "should return the border size" do
+              rule.border_size.should == '3px'
+            end
+
+            it "should return the border style" do
+              rule.border_style.should == 'dashed'
+            end
+
+            it "should return the border color" do
+              rule.border_color.should == 'black'
+            end
+          end
+        end
+      end
     end
 
     context "Compacting CSS properties" do
@@ -162,8 +218,16 @@ module CSS
       context "font property" do
         let(:rule) { Rule.new('#id', 'font-size: 12em; font-weight: bold; font-family: arial; line-height: 1.2em') }
 
-        it "should return a short-hand version of the background property" do
+        it "should return a short-hand version of the font property" do
           rule.font.should == 'bold 12em/1.2em arial'
+        end
+      end
+
+      context "border property" do
+        let(:rule) { Rule.new('#id', 'border-size: 1em; border-style: dotted; border-color: rgba(127, 255, 64, 0.5);') }
+
+        it "should return a short-hand version of the border property" do
+          rule.border.should == '1em dotted rgba(127, 255, 64, 0.5)'
         end
       end
     end

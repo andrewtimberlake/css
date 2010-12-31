@@ -19,6 +19,12 @@ module CSS
       'font-family' => 'inherit'
     }
 
+    DEFAULT_BORDER_PROPERTIES = {
+      'border-size' => '3px',
+      'border-style' => nil,
+      'border-color' => 'black'
+    }
+
     attr_reader :selector
 
     def initialize(selector, rules)
@@ -31,6 +37,8 @@ module CSS
         compact_background_property
       elsif property_name.to_sym == :font
         compact_font_property
+      elsif property_name.to_sym == :border
+        compact_border_property
       else
         @rules[normalize_property_name(property_name)]
       end
@@ -53,6 +61,10 @@ module CSS
       if (properties & DEFAULT_FONT_PROPERTIES.keys).size > 0
         properties -= DEFAULT_FONT_PROPERTIES.keys
         properties << 'font'
+      end
+      if (properties & DEFAULT_BORDER_PROPERTIES.keys).size > 0
+        properties -= DEFAULT_BORDER_PROPERTIES.keys
+        properties << 'border'
       end
       properties
     end
@@ -93,6 +105,8 @@ module CSS
           expand_background_property value
         elsif name == 'font'
           expand_font_property value
+        elsif name == 'border'
+          expand_border_property value
         else
           {name => value}
         end
@@ -158,6 +172,27 @@ module CSS
         properties
       end
 
+      def expand_border_property(value)
+        properties = DEFAULT_BORDER_PROPERTIES.clone
+
+        values = value.split(/\s+/)
+
+        val = values.pop
+        if val =~ /^(#|rgb)/ || Colors::NAMES.include?(val.upcase)
+          properties['border-color'] = val
+        else
+          values << val
+        end
+
+        val = values.pop
+        properties['border-style'] = val if val
+
+        val = values.pop
+        properties['border-size'] = val if val
+
+        properties
+      end
+
       def compact_background_property
         %w(background-color background-image background-repeat background-position background-attachment).map { |prop| @rules[prop] != DEFAULT_BACKGROUND_PROPERTIES[prop] ? @rules[prop] : nil }.compact.join(' ')
       end
@@ -174,6 +209,10 @@ module CSS
             nil
           end
         end.compact.join(' ')
+      end
+
+      def compact_border_property
+        %w(border-size border-style border-color).map { |prop| @rules[prop] != DEFAULT_BORDER_PROPERTIES[prop] ? @rules[prop] : nil }.compact.join(' ')
       end
   end
 end
