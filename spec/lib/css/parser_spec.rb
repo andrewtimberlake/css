@@ -6,7 +6,7 @@ module CSS
       let(:results) { Parser.new.parse(fixture('style.css')) }
 
       it "should provide access to individual rulesets by selector" do
-        results['body'].to_s.should == 'background:black url(../images/background.jpg) fixed;color:#333333;margin:0'
+        results['body'].to_s.should == 'color:#333333;margin:0;background:black url(../images/background.jpg) fixed'
       end
 
       it "should provide access to individual properties" do

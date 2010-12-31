@@ -1,3 +1,4 @@
+require "css/colors"
 require "css/errors"
 require "css/parser"
 require "css/rule"
