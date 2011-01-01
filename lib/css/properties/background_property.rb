@@ -1,45 +1,34 @@
 module CSS
   class BackgroundProperty < Property
-    DEFAULT_PROPERTIES = {
-      'color' => 'transparent',
-      'image' => 'none',
-      'repeat' => 'repeat',
-      'position' => 'top left',
-      'attachment' => 'scroll'
-    }
-
-    def initialize(*args)
-      @properties = DEFAULT_PROPERTIES.clone
-      super
-    end
-
     def name
       'background'
     end
 
     def value
-      %w(color image repeat position attachment).map { |prop| @properties[prop] != DEFAULT_PROPERTIES[prop] ? @properties[prop] : nil }.compact.join(' ')
+      %w(color image repeat position attachment).map { |prop| @properties[prop] != default_properties[prop] ? @properties[prop] : nil }.compact.join(' ')
     end
 
     def to_s
       [name, value].join(':')
     end
 
-    def method_missing(method_name, *args, &block)
-      if method_name.to_s[-1..-1] == '='
-        @properties[method_name.to_s.chop] = args[0]
-      else
-        @properties[method_name.to_s] || super
-      end
-    end
-
     private
       def init(name, value)
         if name =~ /-/
-          @properties[name.sub(/[^-]+-(.*)/, '$1')] = value
+          @properties[name.sub(/[^-]+-(.*)/, '\1')] = value
         else
           expand_property value if value
         end
+      end
+
+      def default_properties
+        {
+          'color' => 'transparent',
+          'image' => 'none',
+          'repeat' => 'repeat',
+          'position' => 'top left',
+          'attachment' => 'scroll'
+        }
       end
 
       def expand_property(value)

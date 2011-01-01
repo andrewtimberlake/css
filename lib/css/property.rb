@@ -1,9 +1,12 @@
 module CSS
   class Property
+    include Normalize
+
     attr_reader :name, :value
 
     def initialize(*args)
       raise "Please use Property.create instead of Property.new" unless args[0] == :private
+      @properties ||= {}
       init(args[1], args[2])
     end
 
@@ -11,6 +14,18 @@ module CSS
       klass = case name
       when /^background/
         BackgroundProperty
+      when /^font/
+        FontProperty
+      when /^border/
+        BorderProperty
+      when /^outline/
+        OutlineProperty
+      when /^margin/
+        MarginProperty
+      when /^padding/
+        PaddingProperty
+      when /^list-style/
+        ListStyleProperty
       else
         Property
       end
@@ -19,7 +34,47 @@ module CSS
     end
 
     def to_s
-      @value
+      [@name, @value].join(':')
+    end
+
+    def ==(val)
+      @value == val
+    end
+
+    def <<(val)
+      @value = val
+    end
+
+    def get(property_name)
+      @properties[property_name] == default_properties[property_name] ? nil : @properties[property_name]
+    end
+
+    def [](property_name)
+      get property_name
+    end
+
+    def <<(merge_property)
+      default_properties.keys.each do |property_name|
+        @properties[property_name] = merge_property[property_name] unless merge_property[property_name] == default_properties[property_name]
+      end
+    end
+
+    def method_missing(method_name, *args, &block)
+      if method_name.to_s[-1..-1] == '='
+        property_name = normalize_property_name(method_name.to_s.chop)
+        if default_properties.keys.include?(property_name)
+          @properties[property_name] = args[0]
+        else
+          super
+        end
+      else
+        property_name = normalize_property_name(method_name.to_s)
+        if default_properties.keys.include?(property_name)
+          get(property_name)
+        else
+          super
+        end
+      end
     end
 
     private
@@ -27,7 +82,17 @@ module CSS
         @name = name
         @value = value
       end
+
+      def default_properties
+        {}
+      end
   end
 end
 
 require "css/properties/background_property.rb"
+require "css/properties/font_property.rb"
+require "css/properties/border_property.rb"
+require "css/properties/outline_property.rb"
+require "css/properties/margin_property.rb"
+require "css/properties/padding_property.rb"
+require "css/properties/list_style_property.rb"

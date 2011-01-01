@@ -53,15 +53,15 @@ module CSS
       end
 
       it "should have a paragraph with a border of 1px" do
-        css['p'].border.should == '1px'
+        css['p'].border.size.should == '1px'
       end
 
       it "should have a header 1 with a bottom margin larger than the other margins" do
-        css['h1'].margin.should == '3px 3px 1em'
+        css['h1'].margin.to_s.should == 'margin:3px 3px 1em'
       end
 
       it "should have a header 2 with the same padding all around" do
-        css['h2'].padding.should == '3px'
+        css['h2'].padding.to_s.should == 'padding:3px'
       end
     end
   end

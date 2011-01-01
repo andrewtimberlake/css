@@ -1,5 +1,7 @@
+require "numbers"
 require "css/colors"
 require "css/errors"
+require "css/normalize"
 require "css/parser"
 require "css/property"
 require "css/rule"
