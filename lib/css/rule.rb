@@ -40,9 +40,19 @@ module CSS
 
     attr_reader :selector
 
-    def initialize(selector, rules)
+    def initialize(selector, rule_text)
       @selector = selector
-      @properties, @rules = parse_rules(rules)
+      @properties = Set.new
+      @rules = {}
+
+      parse_rules(@properties, @rules, rule_text)
+    end
+
+    def <<(rule)
+      rule.properties.each do |property|
+        @properties << property
+        @rules[property] = rule[property]
+      end
     end
 
     def get(property_name)
@@ -67,6 +77,10 @@ module CSS
 
     def to_s
       normalized_properties.map { |prop| [prop, get(prop)].join(':') }.join ';'
+    end
+
+    def properties
+      @properties
     end
 
     def normalized_properties
@@ -106,8 +120,8 @@ module CSS
     end
 
     private
-      def parse_rules(rules)
-        rules.split(/;/).inject([[], {}]) do |properties, rule|
+      def parse_rules(properties, rules, rule_text)
+        rule_text.split(/;/).inject([properties, rules]) do |properties, rule|
           property = rule.split(/:/).map { |el| el.strip }
           name = normalize_property_name(property[0])
           value = property[1]

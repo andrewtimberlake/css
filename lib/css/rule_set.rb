@@ -6,8 +6,12 @@ module CSS
     end
 
     def <<(rule)
-      @selectors << rule.selector
-      @rulesets[rule.selector] = rule
+      if @selectors.include?(rule.selector)
+        @rulesets[rule.selector] << rule
+      else
+        @selectors << rule.selector
+        @rulesets[rule.selector] = rule
+      end
     end
 
     def [](selector)

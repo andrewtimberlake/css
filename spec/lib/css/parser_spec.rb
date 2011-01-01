@@ -3,18 +3,18 @@ require 'spec_helper'
 module CSS
   describe Parser do
     context "parsing a CSS file" do
-      let(:results) { Parser.new.parse(fixture('style.css')) }
+      let(:css) { Parser.new.parse(fixture('style.css')) }
 
       it "should provide access to individual rulesets by selector" do
-        results['body'].to_s.should == 'color:#333333;background:black url(../images/background.jpg) fixed;margin:0;padding:5px'
+        (css['body'].to_s.split(/;/) - 'color:#333333;background:black url(../images/background.jpg) fixed;margin:0;padding:5px'.split(/;/)).should == []
       end
 
       it "should provide access to individual properties" do
-        results['body']['color'] == '#333'
+        css['body']['color'] == '#333'
       end
 
       it "should match all selectors" do
-        results.selectors.should == ['body', '#logo', '#container', '#content', '#menu', '#menu ul', '#menu ul li', '#menu ul li a', '#menu ul li a:hover']
+        css.selectors.should == ['body', '#logo', '#container', '#content', '#menu', '#menu ul', '#menu ul li', '#menu ul li a', '#menu ul li a:hover']
       end
     end
 
@@ -42,6 +42,26 @@ module CSS
       end
 
       it "should return the reason for the error" do
+      end
+    end
+
+    context "Overwriting rules" do
+      let(:css) { Parser.new.parse(fixture('overwriting.css')) }
+
+      it "should only have a single paragraph selector" do
+        css.selectors.should == ['p', 'h1', 'h2']
+      end
+
+      it "should have a paragraph with a border of 1px" do
+        css['p'].border.should == '1px'
+      end
+
+      it "should have a header 1 with a bottom margin larger than the other margins" do
+        css['h1'].margin.should == '3px 3px 1em'
+      end
+
+      it "should have a header 2 with the same padding all around" do
+        css['h2'].padding.should == '3px'
       end
     end
   end
