@@ -17,6 +17,10 @@ module CSS
     end
 
     it "should allow referencing a hyphenated property by camel-case method name" do
+      rule.backgroundColor.should == '#333'
+    end
+
+    it "should allow referencing a hyphenated property by underscored method name" do
       rule.background_color.should == '#333'
     end
 
