@@ -423,7 +423,7 @@ module CSS
         context "#{property} property with missing top and right" do
           let(:rule) { Rule.new('#id', "#{property}-left: 1em; #{property}-bottom: 2em;") }
 
-          it "should return a short-hand version of the #{property} property" do
+          it "should not return a short-hand version of the #{property} property" do
             rule[property].should be_nil
           end
         end
