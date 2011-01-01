@@ -5,25 +5,22 @@ module CSS
     end
 
     def to_s
-      values = []
-      font_values = %w(style variant weight size family).map do |prop|
-        if @properties[prop] != default_properties[prop]
-          if prop == 'size' && get('size') != nil && @properties['line-height']
-            [@properties[prop], @properties['line-height']].join('/')
+      if size && family
+        values = %w(style variant weight size family).map do |prop|
+          if @properties[prop] != default_properties[prop]
+            if prop == 'size' && get('size') != nil && @properties['line-height']
+              [@properties[prop], @properties['line-height']].join('/')
+            else
+              @properties[prop]
+            end
           else
-            @properties[prop]
+            nil
           end
-        else
-          nil
-        end
-      end.compact
-      if font_values.size > 0
-        values << "font:#{font_values.join(' ')}"
+        end.compact.join(' ')
+        [name, values].join(':')
+      else
+        @properties.map { |prop, val| "#{prop == 'line-height' ? '' : 'font-'}#{prop}:#{val}" }.join(';')
       end
-      if get('size').nil? && get('line-height')
-        values << "line-height:#{get('line-height')}"
-      end
-      values.join(';')
     end
 
     private

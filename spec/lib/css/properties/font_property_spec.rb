@@ -106,19 +106,34 @@ module CSS
       end
     end
 
-    context "line-height on it's own" do
-      let(:font) { Property.create('line-height', 1.2.em) }
+    context "line-height" do
+      context "on it's own" do
+        let(:font) { Property.create('line-height', 1.2.em) }
 
-      it "should return a font property" do
-        font.should be_a(FontProperty)
+        it "should return a font property" do
+          font.should be_a(FontProperty)
+        end
+
+        it "should return the line height" do
+          font.line_height.should == 1.2.em
+        end
+
+        it "should output the line-height property" do
+          font.to_s.should == 'line-height:1.2em'
+        end
       end
 
-      it "should return the line height" do
-        font.line_height.should == 1.2.em
-      end
+      context "with font size" do
+        let(:font) { Property.create('font') }
 
-      it "should output the line-height property" do
-        font.to_s.should == 'line-height:1.2em'
+        before do
+          font.line_height = 1.3.em
+          font.size = 12.px
+        end
+
+        it "should output in two long-format properties" do
+          font.to_s.should == 'font-size:12px;line-height:1.3em'
+        end
       end
     end
   end
