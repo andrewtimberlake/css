@@ -14,7 +14,7 @@ module CSS
       klass = case name
       when /^background/
         BackgroundProperty
-      when /^font/
+      when /^(font|line-height)/
         FontProperty
       when /^border/
         BorderProperty

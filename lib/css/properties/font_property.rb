@@ -4,10 +4,11 @@ module CSS
       'font'
     end
 
-    def value
-      %w(style variant weight size family).map do |prop|
+    def to_s
+      values = []
+      font_values = %w(style variant weight size family).map do |prop|
         if @properties[prop] != default_properties[prop]
-          if prop == 'size' && @properties['line-height']
+          if prop == 'size' && get('size') != nil && @properties['line-height']
             [@properties[prop], @properties['line-height']].join('/')
           else
             @properties[prop]
@@ -15,16 +16,21 @@ module CSS
         else
           nil
         end
-      end.compact.join(' ')
-    end
-
-    def to_s
-      [name, value].join(':')
+      end.compact
+      if font_values.size > 0
+        values << "font:#{font_values.join(' ')}"
+      end
+      if get('size').nil? && get('line-height')
+        values << "line-height:#{get('line-height')}"
+      end
+      values.join(';')
     end
 
     private
       def init(name, value)
-        if name =~ /-/
+        if name == 'line-height'
+          @properties['line-height'] = value
+        elsif name =~ /-/
           @properties[name.sub(/[^-]+-(.*)/, '\1')] = value
         else
           expand_property value if value

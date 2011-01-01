@@ -83,10 +83,6 @@ module CSS
         font.line_height = '1.2em'
       end
 
-      it "#value should return a short-hand version of the background property" do
-        font.value.should == 'bold 12em/1.2em arial'
-      end
-
       it "#to_s should return the full property syntax" do
         font.to_s.should == 'font:bold 12em/1.2em arial'
       end
@@ -107,6 +103,22 @@ module CSS
       it "should overwrite existing properties" do
         font1.size.should == 11.px
         font1.line_height.should == 1.5.em
+      end
+    end
+
+    context "line-height on it's own" do
+      let(:font) { Property.create('line-height', 1.2.em) }
+
+      it "should return a font property" do
+        font.should be_a(FontProperty)
+      end
+
+      it "should return the line height" do
+        font.line_height.should == 1.2.em
+      end
+
+      it "should output the line-height property" do
+        font.to_s.should == 'line-height:1.2em'
       end
     end
   end
