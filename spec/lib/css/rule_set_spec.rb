@@ -9,7 +9,7 @@ module CSS
     end
 
     it "should return all the selectors" do
-      ruleset.selectors.should be_a(Set)
+      ruleset.selectors.should be_a(Array)
     end
 
     it "should return all the rules" do

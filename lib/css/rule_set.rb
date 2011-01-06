@@ -1,9 +1,7 @@
-require 'set'
-
 module CSS
   class RuleSet
     def initialize
-      @selectors = Set.new
+      @selectors = []
       @rules = {}
     end
 

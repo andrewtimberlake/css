@@ -15,7 +15,7 @@ module CSS
       end
 
       it "should match all selectors" do
-        css.selectors.should == Set.new(['body', '#logo', '#container', '#content', '#menu', '#menu ul', '#menu ul li', '#menu ul li a', '#menu ul li a:hover'])
+        css.selectors.should == ['body', '#logo', '#container', '#content', '#menu', '#menu ul', '#menu ul li', '#menu ul li a', '#menu ul li a:hover']
       end
     end
 
@@ -85,7 +85,7 @@ module CSS
       let(:css) { Parser.new.parse(fixture('overwriting.css')) }
 
       it "should only have a single paragraph selector" do
-        css.selectors.should == Set.new(['p', 'h1', 'h2'])
+        css.selectors.should == ['p', 'h1', 'h2']
       end
 
       it "should have a paragraph with a border of 1px" do
