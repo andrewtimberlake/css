@@ -1,4 +1,6 @@
 # Shorthand conversions based on guide by Dustin Diaz - http://www.dustindiaz.com/css-shorthand/
+require 'set'
+
 module CSS
   class Rule
     include Colors
@@ -8,7 +10,7 @@ module CSS
 
     def initialize(selector, rule_text)
       @selector = selector
-      @properties = Set.new
+      @properties = ::Set.new
       @rules = {}
 
       parse_rules(@properties, @rules, rule_text)

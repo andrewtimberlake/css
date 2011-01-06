@@ -1,0 +1,11 @@
+=CSS
+
+A Ruby gem that allows the parsing and creation of css files.
+
+==Quick Start
+
+  style = "body { background: #FFF url('image.png') no-repeat; }"
+  css = CSS::Parser.new.parse(style)
+  puts css['body'].background.color.to_s #=> #FFF
+  css['body'].background.position = 'top center'
+  puts css['body'].to_s #=> 'background: #FFF url('image.png') top center no-repeat'

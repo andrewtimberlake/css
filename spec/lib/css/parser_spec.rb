@@ -18,6 +18,41 @@ module CSS
       end
     end
 
+    context "parsing a CSS string" do
+      let(:style) { "body { background: #FFF url('image.png') no-repeat; color: #333 }" }
+      let(:css) { Parser.new.parse(style) }
+
+      it "should return the body background color" do
+        css['body'].backgroundColor.should == '#FFF'
+      end
+    end
+
+    context "parsing an open file" do
+      let(:css) do
+        css = nil
+        parser = Parser.new
+        File.open(fixture('style.css')) do |file|
+          css = parser.parse(file)
+        end
+        css
+      end
+
+      it "should return the body background color" do
+        css['body'].color.should == '#333333'
+      end
+    end
+
+    context "parsing two styles one after each other" do
+      it "should be able to parse both successfully" do
+        parser = Parser.new
+        css1 = parser.parse("body { color: #333 }")
+        css2 = parser.parse("body { color: #FFF }")
+
+        css1['body'].color.should == '#333'
+        css2['body'].color.should == '#FFF'
+      end
+    end
+
     context "A failing parse" do
       let(:error) do
         error = nil

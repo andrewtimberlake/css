@@ -11,7 +11,7 @@ require 'rake/rdoctask'
 require 'rake/testtask'
 
 $LOAD_PATH.unshift('lib')
-require 'css-parser'
+require 'css'
 
 desc 'Run code coverage'
 task :coverage do |t|

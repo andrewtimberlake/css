@@ -14,7 +14,6 @@ Gem::Specification.new do |s|
   ]
   s.files = [
     "LICENSE",
-    "VERSION",
   ] + Dir['lib/**/*.rb']
   s.homepage = %q{http://github.com/andrewtimberlake/css}
   s.rdoc_options = ["--charset=UTF-8"]
