@@ -2,16 +2,14 @@ module CSS
   class Property
     include Normalize
 
-    attr_reader :name
-
     def initialize(*args)
-      raise "Please use Property.create instead of Property.new" unless args[0] == :p
+      raise "Please use Property.create instead of Property.new" unless args[0] == :p || args[0].is_a?(Property)
       @properties ||= {}
-      init(args[1], args[2])
+      init(args[0].is_a?(Property) ? args[0] : nil, args[1], args[2])
     end
 
     def self.create(name, value = nil)
-      klass = case name
+      klass = case name.to_s
       when /^background/
         BackgroundProperty
       when /^(font|line-height)/
@@ -37,6 +35,10 @@ module CSS
       @properties.keys.include?(normalize_property_name(property_name))
     end
 
+    def name
+      [@parent.try(:name), @name].compact.join('-')
+    end
+
     def to_s
       @value
     end
@@ -50,7 +52,7 @@ module CSS
     end
 
     def to_style
-      [@name, @value].join(':')
+      [name, @value].join(':')
     end
 
     def ==(val)
@@ -98,7 +100,8 @@ module CSS
     end
 
     private
-      def init(name, value)
+      def init(parent, name, value)
+        @parent = parent
         @name = name
         @value = value
       end

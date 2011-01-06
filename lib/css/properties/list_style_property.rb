@@ -26,15 +26,16 @@ module CSS
     end
 
     private
-      def init(name, value)
+      def init(parent, name, value)
+        @parent = parent
         expand_property value if value
       end
 
       def default_properties
         @@default_properties ||= {
-          'type' => Property.new(:p, 'type', 'disc'),
-          'position' => Property.new(:p, 'position', 'outside'),
-          'image' => Property.new(:p, 'image', 'none')
+          'type' => Property.new(self, 'type', 'disc'),
+          'position' => Property.new(self, 'position', 'outside'),
+          'image' => Property.new(self, 'image', 'none')
         }
       end
 
@@ -43,11 +44,11 @@ module CSS
         while values.size > 0
           val = values.shift
           if val =~ /^url/
-            @properties['image'] = Property.new(:p, 'image', val)
+            @properties['image'] = Property.new(self, 'image', val)
           elsif val =~ /^(inside|outside)/
-            @properties['position'] = Property.new(:p, 'position', val)
+            @properties['position'] = Property.new(self, 'position', val)
           else
-            @properties['type'] = Property.new(:p, 'type', val)
+            @properties['type'] = Property.new(self, 'type', val)
           end
         end
       end

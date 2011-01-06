@@ -36,5 +36,12 @@ module CSS
         color.to_style.should == 'color:#808080'
       end
     end
+
+    context "a child property" do
+      it "should be able to return it's full style" do
+        background = Property.create(:background, '#FFF')
+        background.color.to_style.should == 'background-color:#FFF'
+      end
+    end
   end
 end

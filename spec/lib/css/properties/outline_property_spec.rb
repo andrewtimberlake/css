@@ -99,5 +99,13 @@ module CSS
         outline1.style.should == 'dotted'
       end
     end
+
+    context "child properties" do
+      let(:outline) { Property.create('outline', '2px dotted red') }
+
+      it "should return their full style name" do
+        outline.color.to_style.should == 'outline-color:red'
+      end
+    end
   end
 end

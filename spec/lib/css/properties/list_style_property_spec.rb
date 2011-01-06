@@ -116,5 +116,13 @@ module CSS
         list_style1.type.should == 'circle'
       end
     end
+
+    context "child properties" do
+      let(:list_style) { Property.create('list-style', 'circle inside url(image.png)') }
+
+      it "should return their full style name" do
+        list_style.image.to_style.should == 'list-style-image:url(image.png)'
+      end
+    end
   end
 end

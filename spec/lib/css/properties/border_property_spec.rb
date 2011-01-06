@@ -5,7 +5,7 @@ module CSS
   describe BorderProperty do
     context "As a long-hand property" do
       it "should store that value" do
-        border = Property.create('background-color', '#FFF')
+        border = Property.create('border-color', '#FFF')
         border.color.should == '#FFF'
       end
     end
@@ -143,6 +143,14 @@ module CSS
 
       it "should overwrite existing properties" do
         border1.style.should == 'dotted'
+      end
+    end
+
+    context "child properties" do
+      let(:border) { Property.create('border', '2px dotted red') }
+
+      it "should return their full style name" do
+        border.color.to_style.should == 'border-color:red'
       end
     end
   end

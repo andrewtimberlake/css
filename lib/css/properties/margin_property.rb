@@ -46,10 +46,11 @@ module CSS
     end
 
     private
-      def init(name, value)
+      def init(parent, name, value)
+        @parent = parent
         if name =~ /-/
           property_name = name.sub(/[^-]+-(.*)/, '\1')
-          @properties[property_name] = Property.new(:p, property_name, value)
+          @properties[property_name] = Property.new(self, property_name, value)
         else
           expand_property value if value
         end
@@ -90,10 +91,10 @@ module CSS
           left = values[3]
         end
 
-        @properties['top'] = Property.new(:p, 'top', top)
-        @properties['right'] = Property.new(:p, 'right', right)
-        @properties['bottom'] = Property.new(:p, 'bottom', bottom)
-        @properties['left'] = Property.new(:p, 'left', left)
+        @properties['top'] = Property.new(self, 'top', top)
+        @properties['right'] = Property.new(self, 'right', right)
+        @properties['bottom'] = Property.new(self, 'bottom', bottom)
+        @properties['left'] = Property.new(self, 'left', left)
       end
   end
 end

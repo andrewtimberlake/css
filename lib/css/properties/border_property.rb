@@ -23,10 +23,11 @@ module CSS
     end
 
     private
-      def init(name, value)
+      def init(parent, name, value)
+        @parent = parent
         if name =~ /-/
           property_name = name.sub(/[^-]+-(.*)/, '\1')
-          @properties[property_name] = Property.new(:p, property_name, value)
+          @properties[property_name] = Property.new(self, property_name, value)
         else
           expand_property value if value
         end
@@ -34,9 +35,9 @@ module CSS
 
       def default_properties
         @@default_properties ||= {
-          'size' => Property.create('size', '3px'),
+          'size' => Property.new(self, 'size', '3px'),
           'style' => nil,
-          'color' => Property.create('color', 'black')
+          'color' => Property.new(self, 'color', 'black')
         }
       end
 
@@ -45,7 +46,7 @@ module CSS
 
         val = values.pop
         if val =~ /^(#|rgb)/ || Colors::NAMES.include?(val.upcase)
-          @properties["color"] = Property.create('color', val)
+          @properties["color"] = Property.new(self, 'color', val)
         else
           values << val
         end
@@ -54,11 +55,11 @@ module CSS
         if val =~ /^\d/
           values << val
         else
-          @properties["style"] = Property.create('style', val) if val
+          @properties["style"] = Property.new(self, 'style', val) if val
         end
 
         val = values.pop
-        @properties["size"] = Property.create('size', val) if val
+        @properties["size"] = Property.new(self, 'size', val) if val
       end
   end
 end

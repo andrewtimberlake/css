@@ -140,5 +140,14 @@ module CSS
         end
       end
     end
+
+    context "child properties" do
+      let(:font) { Property.create('font', '24px/1.5em arial') }
+
+      it "should return their full style name" do
+        font.size.to_style.should == 'font-size:24px'
+        font.line_height.to_style.should == 'line-height:1.5em'
+      end
+    end
   end
 end

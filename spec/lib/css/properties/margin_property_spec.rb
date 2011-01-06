@@ -202,5 +202,13 @@ module CSS
         margin1.left.should == 3.px
       end
     end
+
+    context "child properties" do
+      let(:margin) { Property.create('margin', 3.px) }
+
+      it "should return their full style name" do
+        margin.top.to_style.should == 'margin-top:3px'
+      end
+    end
   end
 end

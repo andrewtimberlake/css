@@ -111,5 +111,13 @@ module CSS
         background1.repeat.should be_nil
       end
     end
+
+    context "child properties" do
+      let(:background) { Property.create('background', '#FFF') }
+
+      it "should return their full style name" do
+        background.color.to_style.should == 'background-color:#FFF'
+      end
+    end
   end
 end

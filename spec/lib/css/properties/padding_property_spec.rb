@@ -202,5 +202,13 @@ module CSS
         padding1.left.should == 3.px
       end
     end
+
+    context "child properties" do
+      let(:padding) { Property.create('padding', 5.em) }
+
+      it "should return their full style name" do
+        padding.left.to_style.should == 'padding-left:5em'
+      end
+    end
   end
 end

@@ -23,7 +23,7 @@ module CSS
     end
 
     def rules
-      selectors.map { |selector| @rules[selector] }
+      selectors.map { |e|  }
     end
 
     def to_style
