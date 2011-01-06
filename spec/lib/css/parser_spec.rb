@@ -3,7 +3,7 @@ require 'spec_helper'
 module CSS
   describe Parser do
     context "parsing a CSS file" do
-      let(:css) { Parser.new.parse(fixture('style.css')) }
+      let(:css) { Parser.parse(fixture('style.css')) }
 
       it "should provide access to individual rulesets by selector" do
         puts css['body'].to_s

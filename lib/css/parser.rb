@@ -32,6 +32,10 @@ module CSS
       @ruleset
     end
 
+    def self.parse(file_file_name_or_style_string)
+      new.parse(file_file_name_or_style_string)
+    end
+
     private
       def reset
         @ruleset = RuleSet.new
