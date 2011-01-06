@@ -1,7 +1,9 @@
+require 'set'
+
 module CSS
   class RuleSet
     def initialize
-      @selectors = []
+      @selectors = Set.new
       @rules = {}
     end
 
@@ -20,6 +22,10 @@ module CSS
 
     def selectors
       @selectors
+    end
+
+    def rules
+      selectors.map { |selector| @rules[selector] }
     end
 
     def to_style

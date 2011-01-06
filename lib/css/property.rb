@@ -33,6 +33,10 @@ module CSS
       klass.new(:p, name, value)
     end
 
+    def has_property?(property_name)
+      @properties.keys.include?(normalize_property_name(property_name))
+    end
+
     def to_s
       @value
     end

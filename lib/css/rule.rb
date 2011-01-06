@@ -43,6 +43,27 @@ module CSS
       "#{selector}{#{to_s}}"
     end
 
+    def has_one_property?(*property_names)
+      property_names.any?{ |property_name| has_property?(property_name) }
+    end
+
+    def has_property?(property_name)
+      property_name = normalize_property_name(property_name)
+      if property_name =~ /-/
+        property_name_parts = property_name.split('-')
+        pname = property_name_parts.shift
+        property = nil
+        while property_name_parts.size > 0
+          property = get(pname)
+          break unless property.nil?
+          pname = [pname, property_name_parts.shift].join('-')
+        end
+        property.has_property?(property_name_parts.shift)
+      else
+        properties.include?(property_name)
+      end
+    end
+
     def method_missing(method_name, *args)
       property_name = normalize_property_name(method_name)
       if property_name =~ /-/

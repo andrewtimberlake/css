@@ -37,5 +37,25 @@ module CSS
     it "should respond to #to_style" do
       rule.to_style.should == "#id{background:#333;color:#FFF}"
     end
+
+    it "should reveal that it has a background property" do
+      rule.should have_property(:background)
+    end
+
+    it "should reveal that it has a background-color property" do
+      rule.should have_property(:background_color)
+    end
+
+    it "should not have a background-image property" do
+      rule.should_not have_property(:background_image)
+    end
+
+    it "should not have a font property" do
+      rule.should_not have_property(:font)
+    end
+
+    it "should reveal that is has one of font or background properties" do
+      rule.should have_one_property(:font, :background)
+    end
   end
 end
