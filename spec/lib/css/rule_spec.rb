@@ -54,6 +54,10 @@ module CSS
       rule.should_not have_property(:font)
     end
 
+    it "should not have a border-color property" do
+      rule.should_not have_property(:border_color)
+    end
+
     it "should reveal that is has one of font or background properties" do
       rule.should have_one_property(:font, :background)
     end

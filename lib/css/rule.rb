@@ -58,7 +58,7 @@ module CSS
           break unless property.nil?
           pname = [pname, property_name_parts.shift].join('-')
         end
-        property.has_property?(property_name_parts.shift)
+        property ? property.has_property?(property_name_parts.shift) : false
       else
         properties.include?(property_name)
       end
