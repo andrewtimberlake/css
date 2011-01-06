@@ -13,6 +13,10 @@ module CSS
       %w(type position image).map { |prop| @properties[prop] }.join(' ')
     end
 
+    def to_style
+      [name, to_s].join(':')
+    end
+
     def type
       default_properties['type'] == @properties['type'] ? nil : @properties['type']
     end
@@ -27,10 +31,10 @@ module CSS
       end
 
       def default_properties
-        {
-          'type' => 'disc',
-          'position' => 'outside',
-          'image' => 'none'
+        @@default_properties ||= {
+          'type' => Property.new(:p, 'type', 'disc'),
+          'position' => Property.new(:p, 'position', 'outside'),
+          'image' => Property.new(:p, 'image', 'none')
         }
       end
 
@@ -39,11 +43,11 @@ module CSS
         while values.size > 0
           val = values.shift
           if val =~ /^url/
-            @properties['image'] = val
+            @properties['image'] = Property.new(:p, 'image', val)
           elsif val =~ /^(inside|outside)/
-            @properties['position'] = val
+            @properties['position'] = Property.new(:p, 'position', val)
           else
-            @properties['type'] = val
+            @properties['type'] = Property.new(:p, 'type', val)
           end
         end
       end

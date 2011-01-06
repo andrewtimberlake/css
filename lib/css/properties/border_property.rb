@@ -5,8 +5,17 @@ module CSS
     end
 
     def to_s
-      value = %w(size style color).map { |prop| @properties[prop] != default_properties[prop] ? @properties[prop] : nil }.compact.join(' ')
-      if value == @properties['size']
+      value = %w(size style color).map { |prop| @properties[prop] && @properties[prop] != default_properties[prop] ? @properties[prop].value : nil }.compact.join(' ')
+      if value == @properties['size'].value
+        "#{@properties['size']}"
+      else
+        value
+      end
+    end
+
+    def to_style
+      value = %w(size style color).map { |prop| @properties[prop] && @properties[prop] != default_properties[prop] ? @properties[prop].value : nil }.compact.join(' ')
+      if value == @properties['size'].value
         "border-size:#{@properties['size']}"
       else
         [name, value].join(':')
@@ -16,17 +25,18 @@ module CSS
     private
       def init(name, value)
         if name =~ /-/
-          @properties[name.sub(/[^-]+-(.*)/, '\1')] = value
+          property_name = name.sub(/[^-]+-(.*)/, '\1')
+          @properties[property_name] = Property.new(:p, property_name, value)
         else
           expand_property value if value
         end
       end
 
       def default_properties
-        {
-          'size' => '3px',
+        @@default_properties ||= {
+          'size' => Property.create('size', '3px'),
           'style' => nil,
-          'color' => 'black'
+          'color' => Property.create('color', 'black')
         }
       end
 
@@ -35,7 +45,7 @@ module CSS
 
         val = values.pop
         if val =~ /^(#|rgb)/ || Colors::NAMES.include?(val.upcase)
-          @properties["color"] = val
+          @properties["color"] = Property.create('color', val)
         else
           values << val
         end
@@ -44,11 +54,11 @@ module CSS
         if val =~ /^\d/
           values << val
         else
-          @properties["style"] = val if val
+          @properties["style"] = Property.create('style', val) if val
         end
 
         val = values.pop
-        @properties["size"] = val if val
+        @properties["size"] = Property.create('size', val) if val
       end
   end
 end

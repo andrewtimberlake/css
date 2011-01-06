@@ -36,7 +36,11 @@ module CSS
     end
 
     def to_s
-      properties.map { |prop| get(prop).to_s }.join ';'
+      properties.map { |prop| get(prop).to_style }.join ';'
+    end
+
+    def to_style
+      "#{selector}{#{to_s}}"
     end
 
     def method_missing(method_name, *args)

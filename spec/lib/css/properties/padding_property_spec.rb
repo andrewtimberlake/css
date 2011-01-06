@@ -110,8 +110,12 @@ module CSS
           padding.left = 3.5.ex
         end
 
-        it "#to_s should return the short-hand" do
-          padding.to_s.should == 'padding:1em 1px 2% 3.5ex'
+        it "should respond to #to_s" do
+          padding.to_s.should == '1em 1px 2% 3.5ex'
+        end
+
+        it "should respond to #to_style" do
+          padding.to_style.should == 'padding:1em 1px 2% 3.5ex'
         end
       end
 
@@ -120,8 +124,8 @@ module CSS
           padding.top = padding.right = padding.bottom = padding.left = 3.px
         end
 
-        it "#to_s should return the short-hand" do
-          padding.to_s.should == 'padding:3px'
+        it "#to_style should return the short-hand" do
+          padding.to_style.should == 'padding:3px'
         end
       end
 
@@ -131,8 +135,8 @@ module CSS
           padding.left = padding.right = 5.percent
         end
 
-        it "#to_s should return the short-hand" do
-          padding.to_s.should == 'padding:3gd 5%'
+        it "#to_style should return the short-hand" do
+          padding.to_style.should == 'padding:3gd 5%'
         end
       end
 
@@ -143,8 +147,8 @@ module CSS
           padding.left = padding.right = 8.rem
         end
 
-        it "#to_s should return the short-hand" do
-          padding.to_s.should == 'padding:3px 8rem 15em'
+        it "#to_style should return the short-hand" do
+          padding.to_style.should == 'padding:3px 8rem 15em'
         end
       end
 
@@ -153,8 +157,8 @@ module CSS
           padding.top = 15.px
         end
 
-        it "#to_s should return the short-hand" do
-          padding.to_s.should == 'padding-top:15px'
+        it "#to_style should return the short-hand" do
+          padding.to_style.should == 'padding-top:15px'
         end
       end
 
@@ -164,8 +168,8 @@ module CSS
           padding.left = 5.em
         end
 
-        it "#to_s should return the short-hand" do
-          (padding.to_s.split(';') - 'padding-top:15px;padding-left:5em'.split(';')).should == []
+        it "#to_style should return the short-hand" do
+          (padding.to_style.split(';') - 'padding-top:15px;padding-left:5em'.split(';')).should == []
         end
       end
 
@@ -176,8 +180,8 @@ module CSS
           padding.bottom = 3.gd
         end
 
-        it "#to_s should return the short-hand" do
-          (padding.to_s.split(';') - 'padding-top:15px;padding-bottom:3gd;padding-left:5em'.split(';')).should == []
+        it "#to_style should return the short-hand" do
+          (padding.to_style.split(';') - 'padding-top:15px;padding-bottom:3gd;padding-left:5em'.split(';')).should == []
         end
       end
     end

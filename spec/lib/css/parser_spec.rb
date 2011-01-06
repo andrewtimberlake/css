@@ -6,6 +6,7 @@ module CSS
       let(:css) { Parser.new.parse(fixture('style.css')) }
 
       it "should provide access to individual rulesets by selector" do
+        puts css['body'].to_s
         (css['body'].to_s.split(/;/) - 'color:#333333;background:black url(../images/background.jpg) fixed;margin:0;padding:5px'.split(/;/)).should == []
       end
 
@@ -92,11 +93,11 @@ module CSS
       end
 
       it "should have a header 1 with a bottom margin larger than the other margins" do
-        css['h1'].margin.to_s.should == 'margin:3px 3px 1em'
+        css['h1'].margin.to_style.should == 'margin:3px 3px 1em'
       end
 
       it "should have a header 2 with the same padding all around" do
-        css['h2'].padding.to_s.should == 'padding:3px'
+        css['h2'].padding.to_style.should == 'padding:3px'
       end
     end
   end

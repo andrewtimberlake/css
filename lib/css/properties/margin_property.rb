@@ -11,6 +11,25 @@ module CSS
       left = @properties['left']
 
       if top && right && bottom && left
+        if [top, right, bottom, left] == Array.new(4) { top }
+          top
+        elsif [top, bottom] == Array.new(2) { top } && [left, right] == Array.new(2) { left }
+          [top, left].join(' ')
+        elsif [top, bottom] != Array.new(2) { top } && [left, right] == Array.new(2) { left }
+          [top, left, bottom].join(' ')
+        else
+          [top, right, bottom, left].join(' ')
+        end
+      end
+    end
+
+    def to_style
+      top = @properties['top']
+      right = @properties['right']
+      bottom = @properties['bottom']
+      left = @properties['left']
+
+      if top && right && bottom && left
         value = if [top, right, bottom, left] == Array.new(4) { top }
           top
         elsif [top, bottom] == Array.new(2) { top } && [left, right] == Array.new(2) { left }
@@ -29,14 +48,15 @@ module CSS
     private
       def init(name, value)
         if name =~ /-/
-          @properties[name.sub(/[^-]+-(.*)/, '\1')] = value
+          property_name = name.sub(/[^-]+-(.*)/, '\1')
+          @properties[property_name] = Property.new(:p, property_name, value)
         else
           expand_property value if value
         end
       end
 
       def default_properties
-        {
+        @@default_properties ||= {
           'top' => nil,
           'right' => nil,
           'bottom' => nil,
@@ -70,10 +90,10 @@ module CSS
           left = values[3]
         end
 
-        @properties['top'] = top
-        @properties['right'] = right
-        @properties['bottom'] = bottom
-        @properties['left'] = left
+        @properties['top'] = Property.new(:p, 'top', top)
+        @properties['right'] = Property.new(:p, 'right', right)
+        @properties['bottom'] = Property.new(:p, 'bottom', bottom)
+        @properties['left'] = Property.new(:p, 'left', left)
       end
   end
 end

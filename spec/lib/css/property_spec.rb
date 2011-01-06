@@ -20,5 +20,21 @@ module CSS
         Property.create(property_name, '').should be_a(property_class)
       end
     end
+
+    context "a color property" do
+      let (:color) { Property.create('color', '#808080') }
+
+      it "should respond to #to_s" do
+        color.to_s.should == '#808080'
+      end
+
+      it "should respond to #inspect" do
+        color.inspect.should == '#808080'
+      end
+
+      it "should respond to #to_style" do
+        color.to_style.should == 'color:#808080'
+      end
+    end
   end
 end

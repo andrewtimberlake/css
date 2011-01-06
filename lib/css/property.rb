@@ -2,10 +2,10 @@ module CSS
   class Property
     include Normalize
 
-    attr_reader :name, :value
+    attr_reader :name
 
     def initialize(*args)
-      raise "Please use Property.create instead of Property.new" unless args[0] == :private
+      raise "Please use Property.create instead of Property.new" unless args[0] == :p
       @properties ||= {}
       init(args[1], args[2])
     end
@@ -30,15 +30,31 @@ module CSS
         Property
       end
 
-      klass.new(:private, name, value)
+      klass.new(:p, name, value)
     end
 
     def to_s
+      @value
+    end
+
+    def value
+      to_s
+    end
+
+    def inspect
+      to_s
+    end
+
+    def to_style
       [@name, @value].join(':')
     end
 
     def ==(val)
-      @value == val
+      if val.is_a?(Property)
+        @value == val.value
+      else
+        @value == val
+      end
     end
 
     def <<(val)
@@ -63,7 +79,7 @@ module CSS
       if method_name.to_s[-1..-1] == '='
         property_name = normalize_property_name(method_name.to_s.chop)
         if default_properties.keys.include?(property_name)
-          @properties[property_name] = args[0]
+          @properties[property_name] = Property.new(:p, property_name, args[0])
         else
           super
         end

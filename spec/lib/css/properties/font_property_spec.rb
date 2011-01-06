@@ -83,8 +83,12 @@ module CSS
         font.line_height = '1.2em'
       end
 
-      it "#to_s should return the full property syntax" do
-        font.to_s.should == 'font:bold 12em/1.2em arial'
+      it "should respond to #to_s" do
+        font.to_s.should == 'bold 12em/1.2em arial'
+      end
+
+      it "should respond to #to_style" do
+        font.to_style.should == 'font:bold 12em/1.2em arial'
       end
     end
 
@@ -119,7 +123,7 @@ module CSS
         end
 
         it "should output the line-height property" do
-          font.to_s.should == 'line-height:1.2em'
+          font.to_style.should == 'line-height:1.2em'
         end
       end
 
@@ -132,7 +136,7 @@ module CSS
         end
 
         it "should output in two long-format properties" do
-          font.to_s.should == 'font-size:12px;line-height:1.3em'
+          font.to_style.should == 'font-size:12px;line-height:1.3em'
         end
       end
     end

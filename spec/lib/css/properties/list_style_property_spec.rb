@@ -75,8 +75,12 @@ module CSS
           list_style.image = 'url(image.png)'
         end
 
-        it "#to_s should return the short-hand" do
+        it "should respond to #to_s" do
           list_style.to_s.should == 'square inside url(image.png)'
+        end
+
+        it "should respond to #to_style" do
+          list_style.to_style.should == 'list-style:square inside url(image.png)'
         end
       end
 
@@ -88,6 +92,10 @@ module CSS
 
         it "#to_s should return the short-hand" do
           list_style.to_s.should == 'square inside none'
+        end
+
+        it "#to_style should return the short-hand" do
+          list_style.to_style.should == 'list-style:square inside none'
         end
       end
     end

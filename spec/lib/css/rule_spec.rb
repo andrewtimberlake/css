@@ -29,5 +29,13 @@ module CSS
 
       rule.background.image.should == 'url(image.png)'
     end
+
+    it "should respond to #to_s" do
+      rule.to_s.should == "background:#333;color:#FFF"
+    end
+
+    it "should respond to #to_style" do
+      rule.to_style.should == "#id{background:#333;color:#FFF}"
+    end
   end
 end

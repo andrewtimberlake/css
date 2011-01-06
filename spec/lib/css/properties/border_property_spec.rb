@@ -94,8 +94,16 @@ module CSS
           border.color = 'rgba(127, 255, 64, 0.5)'
         end
 
-        it "#to_s should return the full property syntax" do
-          border.to_s.should == 'border:1em dotted rgba(127, 255, 64, 0.5)'
+        it "should respond to #to_s" do
+          border.to_s.should == '1em dotted rgba(127, 255, 64, 0.5)'
+        end
+
+        it "should respond to #inspect" do
+          border.to_s.should == '1em dotted rgba(127, 255, 64, 0.5)'
+        end
+
+        it "should respond to #to_style" do
+          border.to_style.should == 'border:1em dotted rgba(127, 255, 64, 0.5)'
         end
       end
 
@@ -106,7 +114,7 @@ module CSS
         end
 
         it "#to_s should return the full property syntax" do
-          border.to_s.should == 'border:1em dotted'
+          border.to_style.should == 'border:1em dotted'
         end
       end
 
@@ -116,7 +124,7 @@ module CSS
         end
 
         it "#to_s should return the full property syntax" do
-          border.to_s.should == 'border-size:1em'
+          border.to_style.should == 'border-size:1em'
         end
       end
     end
