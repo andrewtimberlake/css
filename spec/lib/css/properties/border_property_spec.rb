@@ -194,6 +194,15 @@ module CSS
           border.to_style.should == 'border-top:2ex inset red;border-right:3em dashed yellow;border-bottom:4px dotted blue;border-left:5% double green'
         end
       end
+
+      context "with just a single side" do
+        let(:css) { Parser.parse("div { border-top: 2px solid red }") }
+        let(:border) { css['div'].border }
+
+        it "should return just that side in #to_style" do
+          border.to_style.should == "border-top:2px solid red"
+        end
+      end
     end
   end
 end

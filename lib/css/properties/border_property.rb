@@ -8,44 +8,35 @@ module CSS
       'border'
     end
 
-    def style_values
-      NESW.map { |o| send(o).style }
-    end
-
-    def size_values
-      NESW.map { |o| send(o).size }
-    end
-
-    def color_values
-      NESW.map { |o| send(o).color }
-    end
-
     def to_s
-      if %w(size style color).map { |p| send("#{p}_values").uniq }.flatten.compact.size == 3
-        %w(size style color).map { |p| top.send(p) }.join(' ')
-      elsif %w(style color).map { |p| send("#{p}_values").uniq }.flatten.compact.size == 0
-        ["#{name}-size", top.size].join(':')
-      elsif %w(style color).map { |p| send("#{p}_values").uniq }.flatten.compact.size == 2
-        %w(style color).map { |p| top.send(p) }.flatten.compact.join(' ')
-      elsif %w(size style).map { |p| send("#{p}_values").uniq }.flatten.compact.size == 2
-        %w(size style).map { |p| top.send(p) }.flatten.compact.join(' ')
+      sides = NESW.map { |o| @properties[o] }
+      if %w(size style color).all? { |p| sides.all? { |side| @properties['top'].try(p) == side.try(p) && !side.try(p).nil? } }
+        %w(size style color).map { |p| top.send(p).value }.join(' ')
+      elsif %w(style color).all? { |p| sides.all? { |side| @properties['top'].try(p) == side.try(p) && !side.try(p).nil? } }
+        %w(style color).map { |p| top.send(p).value }.join(' ')
+      elsif %w(size style).all? { |p| sides.all? { |side| @properties['top'].try(p) == side.try(p) && !side.try(p).nil? } }
+        %w(size style).map { |p| top.send(p).value }.join(' ')
       end
     end
 
     def to_style
-      if %w(size style color).map { |p| send("#{p}_values").uniq }.flatten.compact.size == 3
-        value = %w(size style color).map { |p| top.send(p) }.compact.join(' ')
-        [name, value].join(':')
-      elsif %w(style color).map { |p| send("#{p}_values").uniq }.flatten.compact.size == 0
-        ["#{name}-size", top.size].join(':')
-      elsif %w(style color).map { |p| send("#{p}_values").uniq }.flatten.compact.size == 2
-        value = %w(style color).map { |p| top.send(p) }.flatten.compact.join(' ')
-        [name, value].join(':')
-      elsif %w(size style).map { |p| send("#{p}_values").uniq }.flatten.compact.size == 2
-        value = %w(size style).map { |p| top.send(p) }.flatten.compact.join(' ')
+      sides = NESW.map { |o| @properties[o] }
+      value = nil
+      if %w(size style color).all? { |p| sides.all? { |side| @properties['top'].try(p) == side.try(p) && !side.try(p).nil? } }
+        value = %w(size style color).map { |p| top.send(p).value }.join(' ')
+      elsif %w(style color).all? { |p| sides.all? { |side| @properties['top'].try(p) == side.try(p) && !side.try(p).nil? } }
+        value = %w(style color).map { |p| top.send(p).value }.join(' ')
+      elsif %w(size style).all? { |p| sides.all? { |side| @properties['top'].try(p) == side.try(p) && !side.try(p).nil? } }
+        value = %w(size style).map { |p| top.send(p).value }.join(' ')
+      end
+      if value
         [name, value].join(':')
       else
-        NESW.map { |o| send(o).to_style }.join(';')
+        if %w(style color).all? { |p| sides.all? { |side| side.try(p).nil? } } && sides.all? { |side| @properties['top'].try('size') == side.try('size') && !side.try('size').nil? }
+          "border-size:#{top.size.value}"
+        else
+          sides.map { |side| side.empty? ? nil : side.to_style }.compact.join(';')
+        end
       end
     end
 
@@ -79,6 +70,11 @@ module CSS
           super
         end
       end
+    end
+
+    def respond_to?(method_name, include_private = false)
+      property_name = normalize_property_name(method_name.to_s[-1..-1] == '=' ? method_name.to_s.chop : method_name)
+      %w(size style color).include?(property_name) || super
     end
 
     private

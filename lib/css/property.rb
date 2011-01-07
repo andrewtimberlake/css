@@ -107,6 +107,15 @@ module CSS
       end
     end
 
+    def respond_to?(method_name, include_private = false)
+      property_name = normalize_property_name(method_name.to_s[-1..-1] == '=' ? method_name.to_s.chop : method_name)
+      default_properties.keys.include?(property_name) || super
+    end
+
+    def empty?
+      @value.nil? && @properties.all? { |p| p.empty? }
+    end
+
     private
       def init(parent, name, value)
         @parent = parent
