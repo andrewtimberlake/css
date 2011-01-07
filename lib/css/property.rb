@@ -44,7 +44,7 @@ module CSS
     end
 
     def to_s
-      to_style
+      @value || to_style
     end
 
     def value
