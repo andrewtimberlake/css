@@ -27,11 +27,7 @@ module CSS
     end
 
     def to_style
-      rules = []
-      selectors.each do |selector|
-        rules << @rules[selector].to_style
-      end
-      rules.join("\n")
+      rules.map { |rule| rule.to_style }.join("\n")
     end
   end
 end

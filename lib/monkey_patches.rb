@@ -5,3 +5,11 @@ unless Object.methods.include?('try')
     end
   end
 end
+
+unless NilClass.methods.include?('empty?')
+  class NilClass
+    def empty?
+      true
+    end
+  end
+end

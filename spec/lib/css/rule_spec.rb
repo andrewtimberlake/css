@@ -2,7 +2,7 @@ require "spec_helper"
 
 module CSS
   describe Rule do
-    let(:rule) { Rule.new('#id', 'background-color:#333;color:#FFF') }
+    let(:rule) { Rule.new('#id', 'background-color:#333;color:#FFF;z-index:99') }
 
     it "should return a property by name" do
       rule.color.should == '#FFF'
@@ -31,11 +31,11 @@ module CSS
     end
 
     it "should respond to #to_s" do
-      rule.to_s.should == "background:#333;color:#FFF"
+      rule.to_s.should == "background:#333;color:#FFF;z-index:99"
     end
 
     it "should respond to #to_style" do
-      rule.to_style.should == "#id{background:#333;color:#FFF}"
+      rule.to_style.should == "#id{background:#333;color:#FFF;z-index:99}"
     end
 
     it "should reveal that it has a background property" do
@@ -60,6 +60,14 @@ module CSS
 
     it "should reveal that is has one of font or background properties" do
       rule.should have_one_property(:font, :background)
+    end
+
+    it "should be able to retrieve a long-hand rule via []" do
+      rule['background-color'].should == '#333'
+    end
+
+    it "should be able to retrieve a property with a hyphen" do
+      rule['z-index'].should == '99'
     end
   end
 end
