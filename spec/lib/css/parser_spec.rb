@@ -89,7 +89,7 @@ module CSS
       end
 
       it "should have a paragraph with a border of 1px" do
-        css['p'].border.size.should == '1px'
+        css['p'].border.size.should == 1.px
       end
 
       it "should have a header 1 with a bottom margin larger than the other margins" do

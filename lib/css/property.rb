@@ -4,7 +4,7 @@ module CSS
 
     def initialize(*args)
       raise "Please use Property.create instead of Property.new" unless args[0] == :p || args[0].is_a?(Property)
-      @properties ||= {}
+      @properties = {}
       init(args[0].is_a?(Property) ? args[0] : nil, args[1], args[2])
     end
 
@@ -57,10 +57,18 @@ module CSS
 
     def ==(val)
       if val.is_a?(Property)
-        @value == val.value
+        @value == val.instance_variable_get(:@value) && @properties == val.instance_variable_get(:@properties)
       else
         @value == val
       end
+    end
+
+    def eql?(property)
+      property.is_a?(Property) && self == property
+    end
+
+    def hash
+      to_style.hash
     end
 
     def <<(val)
@@ -112,10 +120,12 @@ module CSS
   end
 end
 
+require "css/properties/margin_property.rb"
 require "css/properties/background_property.rb"
 require "css/properties/font_property.rb"
 require "css/properties/border_property.rb"
+require "css/properties/border_orientation_property.rb"
+require "css/properties/border_unit_property.rb"
 require "css/properties/outline_property.rb"
-require "css/properties/margin_property.rb"
 require "css/properties/padding_property.rb"
 require "css/properties/list_style_property.rb"

@@ -1,6 +1,5 @@
 require "spec_helper"
 
-# TODO: Handle border-(left|right|top|bottom) and border-(color|style|size)
 module CSS
   describe BorderProperty do
     context "As a long-hand property" do
@@ -151,6 +150,49 @@ module CSS
 
       it "should return their full style name" do
         border.color.to_style.should == 'border-color:red'
+      end
+    end
+
+    context "border sides" do
+      let(:border) { Property.create('border', '1px dashed #808080') }
+
+      it "should return the values for the top" do
+        border.top.color.should == '#808080'
+      end
+
+      it "should return the values for the left" do
+        border.left.style.should == 'dashed'
+      end
+
+      it "should return the values for the bottom" do
+        border.bottom.size.should == 1.px
+      end
+
+      it "should return the values for the right" do
+        border.right.size.should == 1.px
+      end
+
+      context "with different borders on each side" do
+        before do
+          border.top.color = 'red'
+          border.right.color = 'yellow'
+          border.bottom.color = 'blue'
+          border.left.color = 'green'
+
+          border.top.size = 2.ex
+          border.right.size = 3.em
+          border.bottom.size = 4.px
+          border.left.size = 5.percent
+
+          border.top.style = 'inset'
+          border.right.style = 'dashed'
+          border.bottom.style = 'dotted'
+          border.left.style = 'double'
+        end
+
+        it "should return sides in #to_style" do
+          border.to_style.should == 'border-top:2ex inset red;border-right:3em dashed yellow;border-bottom:4px dotted blue;border-left:5% double green'
+        end
       end
     end
   end

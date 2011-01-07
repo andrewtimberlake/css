@@ -1,5 +1,9 @@
+require 'css/helpers/orientation'
+
 module CSS
   class MarginProperty < Property
+    include Orientation
+
     def name
       'margin'
     end
@@ -10,16 +14,14 @@ module CSS
       bottom = @properties['bottom']
       left = @properties['left']
 
-      if top && right && bottom && left
-        if [top, right, bottom, left] == Array.new(4) { top }
-          top
-        elsif [top, bottom] == Array.new(2) { top } && [left, right] == Array.new(2) { left }
-          [top, left].join(' ')
-        elsif [top, bottom] != Array.new(2) { top } && [left, right] == Array.new(2) { left }
-          [top, left, bottom].join(' ')
-        else
-          [top, right, bottom, left].join(' ')
-        end
+      compact_orientation(top, right, bottom, left)
+    end
+
+    def ==(val)
+      if val.is_a?(Property)
+        super
+      else
+        to_s == val
       end
     end
 
@@ -30,15 +32,7 @@ module CSS
       left = @properties['left']
 
       if top && right && bottom && left
-        value = if [top, right, bottom, left] == Array.new(4) { top }
-          top
-        elsif [top, bottom] == Array.new(2) { top } && [left, right] == Array.new(2) { left }
-          [top, left].join(' ')
-        elsif [top, bottom] != Array.new(2) { top } && [left, right] == Array.new(2) { left }
-          [top, left, bottom].join(' ')
-        else
-          [top, right, bottom, left].join(' ')
-        end
+        value = to_s
         [name, value].join(':')
       else
         default_properties.keys.map { |prop| @properties[prop] ? ["#{name}-#{prop}", @properties[prop]].join(':') : nil }.compact.join(';')

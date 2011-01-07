@@ -5,6 +5,10 @@ module CSS
       super
     end
 
+    def get(property_name)
+      @properties[property_name]
+    end
+
     def name
       'list-style'
     end
@@ -22,12 +26,13 @@ module CSS
     end
 
     def type=(val)
-      @properties['type'] = val
+      @properties['type'] = Property.new(self, 'type', val)
     end
 
     private
       def init(parent, name, value)
         @parent = parent
+        @properties['image'] = Property.new(self, 'image', 'none')
         expand_property value if value
       end
 

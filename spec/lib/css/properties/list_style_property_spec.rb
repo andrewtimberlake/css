@@ -41,7 +41,7 @@ module CSS
           end
 
           it "should return the list-style-image" do
-            list_style.image.should be_nil
+            list_style.image.should == 'none'
           end
         end
       end
@@ -59,7 +59,7 @@ module CSS
           end
 
           it "should return the list-style-image" do
-            list_style.image.should be_nil
+            list_style.image.should == 'none'
           end
         end
       end

@@ -35,6 +35,15 @@ module CSS
       it "should respond to #to_style" do
         color.to_style.should == 'color:#808080'
       end
+
+      it "should implement to #==" do
+        color.should == "#808080"
+      end
+
+      it "should implement to #eql?" do
+        color.should_not eql("#808080")
+        color.should eql(Property.create('color', '#808080'))
+      end
     end
 
     context "a child property" do
