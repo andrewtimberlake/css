@@ -1,3 +1,5 @@
+require 'css/helpers/normalize'
+
 module CSS
   class Property
     include Normalize
@@ -5,7 +7,9 @@ module CSS
     def initialize(*args)
       raise "Please use Property.create instead of Property.new" unless args[0] == :p || args[0].is_a?(Property)
       @properties = {}
-      init(args[0].is_a?(Property) ? args[0] : nil, args[1], args[2])
+      name = args[1]
+      value = clean_value(args[2])
+      init(args[0].is_a?(Property) ? args[0] : nil, name, value)
     end
 
     def self.create(name, value = nil)
@@ -125,6 +129,15 @@ module CSS
 
       def default_properties
         {}
+      end
+
+      def clean_value(value)
+        return if value.nil?
+
+        value = value.
+                  to_s.
+                  strip.
+                  gsub(/rgba?\([^)]+\)/) { |match| match.delete(' ') }
       end
   end
 end

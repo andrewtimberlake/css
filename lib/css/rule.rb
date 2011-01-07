@@ -1,5 +1,6 @@
 # Shorthand conversions based on guide by Dustin Diaz - http://www.dustindiaz.com/css-shorthand/
 require 'set'
+require 'css/helpers/normalize'
 
 module CSS
   class Rule
@@ -76,7 +77,7 @@ module CSS
     private
       def parse_rules(properties, rules, rule_text)
         rule_text.split(/;/).inject([properties, rules]) do |properties, rule|
-          property = rule.split(/:/).map { |el| el.strip }
+          property = rule.split(/:/)
           name = normalize_property_name(property[0])
           value = property[1]
 

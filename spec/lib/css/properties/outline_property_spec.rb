@@ -75,7 +75,7 @@ module CSS
       end
 
       it "should respond to #to_style" do
-        outline.to_style.should == 'outline:1em dotted rgba(127, 255, 64, 0.5)'
+        outline.to_style.should == 'outline:1em dotted rgba(127,255,64,0.5)'
       end
     end
 

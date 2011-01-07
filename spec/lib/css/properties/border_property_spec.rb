@@ -94,7 +94,7 @@ module CSS
         end
 
         it "should respond to #to_style" do
-          border.to_style.should == 'border:1em dotted rgba(127, 255, 64, 0.5)'
+          border.to_style.should == 'border:1em dotted rgba(127,255,64,0.5)'
         end
       end
 
