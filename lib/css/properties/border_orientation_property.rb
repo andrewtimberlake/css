@@ -1,14 +1,5 @@
 module CSS
   class BorderOrientationProperty < Property
-    def to_s
-      value = %w(size style color).map { |prop| @properties[prop] && @properties[prop] != default_properties[prop] ? @properties[prop].value : nil }.compact.join(' ')
-      if @properties['size'] && value == @properties['size'].value
-        "#{@properties['size']}"
-      else
-        value
-      end
-    end
-
     def to_style
       value = %w(size style color).map { |prop| @properties[prop] && @properties[prop] != default_properties[prop] ? @properties[prop].value : nil }.compact.join(' ')
       if @properties['color'].nil? && @properties['style'].nil?

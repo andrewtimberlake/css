@@ -82,14 +82,6 @@ module CSS
         background.attachment = 'inherit'
       end
 
-      it "should respond to #to_s" do
-        background.to_s.should == 'url(image.png) top center inherit'
-      end
-
-      it "should respond to #inspect" do
-        background.inspect.should == 'url(image.png) top center inherit'
-      end
-
       it "should respond to #to_style" do
         background.to_style.should == 'background:url(image.png) top center inherit'
       end

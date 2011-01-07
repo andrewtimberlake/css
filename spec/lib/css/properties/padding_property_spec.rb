@@ -110,10 +110,6 @@ module CSS
           padding.left = 3.5.ex
         end
 
-        it "should respond to #to_s" do
-          padding.to_s.should == '1em 1px 2% 3.5ex'
-        end
-
         it "should respond to #to_style" do
           padding.to_style.should == 'padding:1em 1px 2% 3.5ex'
         end

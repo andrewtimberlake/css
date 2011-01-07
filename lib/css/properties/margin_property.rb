@@ -8,20 +8,21 @@ module CSS
       'margin'
     end
 
-    def to_s
-      top = @properties['top']
-      right = @properties['right']
-      bottom = @properties['bottom']
-      left = @properties['left']
-
-      compact_orientation(top, right, bottom, left)
-    end
-
     def ==(val)
       if val.is_a?(Property)
         super
       else
-        to_s == val
+        value == val
+      end
+    end
+
+    def value
+      top = @properties['top']
+      right = @properties['right']
+      bottom = @properties['bottom']
+      left = @properties['left']
+      if top && right && bottom && left
+        compact_orientation(top, right, bottom, left)
       end
     end
 
@@ -32,10 +33,10 @@ module CSS
       left = @properties['left']
 
       if top && right && bottom && left
-        value = to_s
+        value = compact_orientation(top, right, bottom, left)
         [name, value].join(':')
       else
-        default_properties.keys.map { |prop| @properties[prop] ? ["#{name}-#{prop}", @properties[prop]].join(':') : nil }.compact.join(';')
+        default_properties.keys.map { |prop| @properties[prop] ? ["#{name}-#{prop}", @properties[prop].value].join(':') : nil }.compact.join(';')
       end
     end
 

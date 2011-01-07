@@ -4,30 +4,14 @@ module CSS
       'font'
     end
 
-    def to_s
-      if size && family
-        %w(style variant weight size family).map do |prop|
-          if @properties[prop] != default_properties[prop]
-            if prop == 'size' && get('size') != nil && @properties['line-height']
-              [@properties[prop], @properties['line-height']].join('/')
-            else
-              @properties[prop]
-            end
-          else
-            nil
-          end
-        end.compact.join(' ')
-      end
-    end
-
     def to_style
       if size && family
         values = %w(style variant weight size family).map do |prop|
           if @properties[prop] != default_properties[prop]
             if prop == 'size' && get('size') != nil && @properties['line-height']
-              [@properties[prop], @properties['line-height']].join('/')
+              [@properties[prop].value, @properties['line-height'].value].join('/')
             else
-              @properties[prop]
+              @properties[prop].try(:value)
             end
           else
             nil
@@ -35,7 +19,7 @@ module CSS
         end.compact.join(' ')
         [name, values].join(':')
       else
-        @properties.map { |prop, val| "#{prop == 'line-height' ? '' : 'font-'}#{prop}:#{val}" }.join(';')
+        @properties.map { |property_name, property| "#{property_name == 'line-height' ? '' : 'font-'}#{property_name}:#{property.value}" }.join(';')
       end
     end
 

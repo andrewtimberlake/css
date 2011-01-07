@@ -74,10 +74,6 @@ module CSS
         outline.color = 'rgba(127, 255, 64, 0.5)'
       end
 
-      it "should respond to #to_s" do
-        outline.to_s.should == '1em dotted rgba(127, 255, 64, 0.5)'
-      end
-
       it "should respond to #to_style" do
         outline.to_style.should == 'outline:1em dotted rgba(127, 255, 64, 0.5)'
       end

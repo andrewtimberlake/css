@@ -24,12 +24,8 @@ module CSS
     context "a color property" do
       let (:color) { Property.create('color', '#808080') }
 
-      it "should respond to #to_s" do
-        color.to_s.should == '#808080'
-      end
-
       it "should respond to #inspect" do
-        color.inspect.should == '#808080'
+        color.inspect.should == '#<Property color:#808080>'
       end
 
       it "should respond to #to_style" do

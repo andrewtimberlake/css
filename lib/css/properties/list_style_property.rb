@@ -13,12 +13,9 @@ module CSS
       'list-style'
     end
 
-    def to_s
-      %w(type position image).map { |prop| @properties[prop] }.join(' ')
-    end
-
     def to_style
-      [name, to_s].join(':')
+      value = %w(type position image).map { |prop| @properties[prop].try(:value) }.join(' ')
+      [name, value].join(':')
     end
 
     def type

@@ -40,15 +40,15 @@ module CSS
     end
 
     def to_s
-      @value
+      to_style
     end
 
     def value
-      to_s
+      @value
     end
 
     def inspect
-      to_s
+      "#<Property #{to_style}>"
     end
 
     def to_style

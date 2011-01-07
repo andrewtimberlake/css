@@ -110,10 +110,6 @@ module CSS
           margin.left = 3.5.ex
         end
 
-        it "should respond to #to_s" do
-          margin.to_s.should == '1em 1px 2% 3.5ex'
-        end
-
         it "should respond to #to_style" do
           margin.to_style.should == 'margin:1em 1px 2% 3.5ex'
         end

@@ -83,10 +83,6 @@ module CSS
         font.line_height = '1.2em'
       end
 
-      it "should respond to #to_s" do
-        font.to_s.should == 'bold 12em/1.2em arial'
-      end
-
       it "should respond to #to_style" do
         font.to_style.should == 'font:bold 12em/1.2em arial'
       end

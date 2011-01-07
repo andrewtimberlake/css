@@ -8,17 +8,6 @@ module CSS
       'border'
     end
 
-    def to_s
-      sides = NESW.map { |o| @properties[o] }
-      if %w(size style color).all? { |p| sides.all? { |side| @properties['top'].try(p) == side.try(p) && !side.try(p).nil? } }
-        %w(size style color).map { |p| top.send(p).value }.join(' ')
-      elsif %w(style color).all? { |p| sides.all? { |side| @properties['top'].try(p) == side.try(p) && !side.try(p).nil? } }
-        %w(style color).map { |p| top.send(p).value }.join(' ')
-      elsif %w(size style).all? { |p| sides.all? { |side| @properties['top'].try(p) == side.try(p) && !side.try(p).nil? } }
-        %w(size style).map { |p| top.send(p).value }.join(' ')
-      end
-    end
-
     def to_style
       sides = NESW.map { |o| @properties[o] }
       value = nil

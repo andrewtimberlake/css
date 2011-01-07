@@ -4,12 +4,9 @@ module CSS
       'background'
     end
 
-    def to_s
-      %w(color image repeat position attachment).map { |prop| @properties[prop] && @properties[prop] != default_properties[prop] ? @properties[prop].value : nil }.compact.join(' ')
-    end
-
     def to_style
-      [name, to_s].join(':')
+      values = %w(color image repeat position attachment).map { |prop| @properties[prop] && @properties[prop] != default_properties[prop] ? @properties[prop].value : nil }.compact.join(' ')
+      [name, values].join(':')
     end
 
     private
