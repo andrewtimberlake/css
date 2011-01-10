@@ -8,5 +8,5 @@ require "css/rule"
 require "css/rule_set"
 
 module CSS
-  VERSION = "0.0.3"
+  VERSION = "0.0.4"
 end
