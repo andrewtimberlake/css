@@ -44,7 +44,8 @@ module CSS
           property
         else
           while property_name_parts.size > 0
-            property = property[property_name_parts.shift]
+            next_property_name = property_name_parts.shift
+            property = property[next_property_name] if property
           end
           property
         end
