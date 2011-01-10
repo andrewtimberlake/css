@@ -54,6 +54,20 @@ module CSS
       get property_name
     end
 
+    def []=(property_name, value)
+      property = get(property_name)
+      unless property
+        property = Property.create(property_name, value)
+        if @rules[property.name]
+          @rules[property.name] << property
+        else
+          @properties << property.name
+          @rules[property.name] = property
+        end
+      end
+      property.value = value
+    end
+
     def to_s
       properties.map { |prop| get(prop).to_style }.join ';'
     end
@@ -71,7 +85,12 @@ module CSS
     end
 
     def method_missing(method_name, *args)
-      get(method_name) || super
+      if method_name.to_s[-1..-1] == '='
+        property_name = method_name.to_s.chop
+        self[property_name] = args[0]
+      else
+        get(method_name) || super
+      end
     end
 
     private

@@ -69,5 +69,37 @@ module CSS
     it "should be able to retrieve a property with a hyphen" do
       rule['z-index'].should == '99'
     end
+
+    it "should be able to set a property value with []=" do
+      rule['z-index'] = '100'
+      rule['z-index'].should == '100'
+    end
+
+    it "should be able to set a property by method call" do
+      rule.z_index = '100'
+      rule.z_index.should == '100'
+    end
+
+    it "should be able to set a short-hand property" do
+      rule['background'] = 'url(image2.png)'
+      rule.background.image.should == 'url(image2.png)'
+    end
+
+    it "should be able to set a short-hand property via method call" do
+      rule.background = 'url(image2.png)'
+      rule.background.image.should == 'url(image2.png)'
+    end
+
+    it "should be able to set a long-hand property" do
+      rule['background-image'] = 'url(image2.png)'
+      rule.background.image.should be_a(Property)
+      rule.background.image.should == 'url(image2.png)'
+    end
+
+    it "should be able to set a long-hand property via method call" do
+      rule.background.image = 'url(image2.png)'
+      rule.background.image.should be_a(Property)
+      rule.background.image.should == 'url(image2.png)'
+    end
   end
 end

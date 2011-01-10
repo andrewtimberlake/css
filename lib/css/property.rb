@@ -4,6 +4,8 @@ module CSS
   class Property
     include Normalize
 
+    attr_reader :value
+
     def initialize(*args)
       raise "Please use Property.create instead of Property.new" unless args[0] == :p || args[0].is_a?(Property)
       @properties = {}
@@ -43,12 +45,16 @@ module CSS
       [@parent.try(:name), @name].compact.join('-')
     end
 
-    def to_s
-      @value || to_style
+    def value=(val)
+      if @properties.size > 0
+        expand_property val
+      else
+        @value = val
+      end
     end
 
-    def value
-      @value
+    def to_s
+      @value || to_style
     end
 
     def inspect
