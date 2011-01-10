@@ -43,7 +43,10 @@ module CSS
         if property && property_name_parts.size == 0
           property
         else
-          property ? property[property_name_parts.shift] : nil
+          while property_name_parts.size > 0
+            property = property[property_name_parts.shift]
+          end
+          property
         end
       else
         @rules[normalize_property_name(property_name)]

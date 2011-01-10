@@ -194,6 +194,11 @@ module CSS
         it "should return just that side in #to_style" do
           border.to_style.should == "border-top:2px solid red"
         end
+
+        it "should return just the color" do
+          css['div'].border.top.color.should == 'red'
+          css['div']['border-top-color'].should == 'red'
+        end
       end
     end
   end
