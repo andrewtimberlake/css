@@ -100,25 +100,27 @@ module CSS
     end
 
     def method_missing(method_name, *args, &block)
-      if method_name.to_s[-1..-1] == '='
-        property_name = normalize_property_name(method_name.to_s.chop)
-        if default_properties.keys.include?(property_name)
+      property_name = method_name.to_s
+      setter = property_name.chomp!('=')
+
+      if respond_to?(method_name)
+        property_name = normalize_property_name(property_name)
+
+        if setter
           @properties[property_name] = Property.new(:p, property_name, args[0])
         else
-          super
+          get(property_name)
         end
       else
-        property_name = normalize_property_name(method_name.to_s)
-        if default_properties.keys.include?(property_name)
-          get(property_name)
-        else
-          super
-        end
+        super
       end
     end
 
     def respond_to?(method_name, include_private = false)
-      property_name = normalize_property_name(method_name.to_s[-1..-1] == '=' ? method_name.to_s.chop : method_name)
+      property_name = method_name.to_s
+      setter = property_name.chomp!('=')
+      property_name = normalize_property_name(property_name)
+
       default_properties.keys.include?(property_name) || super
     end
 

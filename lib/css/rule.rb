@@ -89,12 +89,22 @@ module CSS
     end
 
     def method_missing(method_name, *args)
-      if method_name.to_s[-1..-1] == '='
-        property_name = method_name.to_s.chop
-        self[property_name] = args[0]
+      property_name = method_name.to_s
+      setter = property_name.chomp!('=')
+
+      if has_property?(property_name)
+        if setter
+          self[property_name] = args[0]
+        else
+          get(property_name) || super
+        end
       else
-        get(method_name) || super
+        super
       end
+    end
+
+    def respond_to?(method_name, include_private = false)
+      has_property?(property_name) || super
     end
 
     private
