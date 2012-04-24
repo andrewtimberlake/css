@@ -6,7 +6,6 @@ module CSS
       let(:css) { Parser.parse(fixture('style.css')) }
 
       it "should provide access to individual rulesets by selector" do
-        puts css['body'].to_s
         (css['body'].to_s.split(/;/) - 'color:#333333;background:black url(../images/background.jpg) fixed;margin:0;padding:5px'.split(/;/)).should == []
       end
 
@@ -51,6 +50,15 @@ module CSS
 
         css1['body'].color.should == '#333'
         css2['body'].color.should == '#FFF'
+      end
+    end
+
+    context "Comma separated selectors" do
+      let(:css) { Parser.parse("h1,h2 { font-size: 14px; }") }
+
+      it "should resolve into a rule per selector" do
+        css["h1"].font_size.should == "14px"
+        css["h2"].font_size.should == "14px"
       end
     end
 

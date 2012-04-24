@@ -67,7 +67,9 @@ module CSS
           when '}'
             unless @state == :comment
               @buffer.pop
-              @ruleset << Rule.new(@selector, @buffer.join.strip)
+              @selector.split(",").each do |selector|
+                @ruleset << Rule.new(selector.strip, @buffer.join.strip)
+              end
               @state = :selector
               @buffer.clear
             end
