@@ -34,6 +34,11 @@ module CSS
       rule.to_s.should == "background:#333;color:#FFF;z-index:99"
     end
 
+    it "should respond to #dup" do
+      duplicate = rule.dup
+      duplicate.to_style.should == rule.to_style
+    end
+
     it "should respond to #to_style" do
       rule.to_style.should == "#id{background:#333;color:#FFF;z-index:99}"
     end

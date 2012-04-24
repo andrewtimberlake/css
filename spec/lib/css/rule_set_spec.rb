@@ -4,6 +4,11 @@ module CSS
   describe RuleSet do
     let (:ruleset) { Parser.new.parse(fixture('style.css')) }
 
+    it "should respond to #dup" do
+      duplicate = ruleset.dup
+      duplicate.to_style.should == ruleset.to_style
+    end
+
     it "should respond to #to_style" do
       ruleset.to_style.should match(/body\{/)
     end
