@@ -5,6 +5,14 @@ module CSS
       @rules = {}
     end
 
+    def dup
+      duplicate = self.class.new
+      rules.each do |rule|
+        duplicate << rule.dup
+      end
+      duplicate
+    end
+
     def <<(rule)
       if @selectors.include?(rule.selector)
         @rules[rule.selector] << rule
@@ -12,6 +20,8 @@ module CSS
         @selectors << rule.selector
         @rules[rule.selector] = rule
       end
+
+      self
     end
 
     def [](selector)

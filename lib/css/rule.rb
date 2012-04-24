@@ -17,6 +17,10 @@ module CSS
       parse_rules(@properties, @rules, rule_text)
     end
 
+    def dup
+      self.class.new(@selector, to_s)
+    end
+
     def <<(rule)
       rule.properties.each do |property|
         if @rules[property]
@@ -26,6 +30,8 @@ module CSS
           @rules[property] = rule[property]
         end
       end
+
+      self
     end
 
     def get(property_name)
@@ -73,7 +79,7 @@ module CSS
     end
 
     def to_s
-      properties.map { |prop| get(prop).to_style }.join ';'
+      properties.sort.map { |prop| get(prop).to_style }.join ';'
     end
 
     def to_style
