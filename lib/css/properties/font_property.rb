@@ -19,7 +19,7 @@ module CSS
         end.compact.join(' ')
         [name, values].join(':')
       else
-        @properties.map { |property_name, property| "#{property_name == 'line-height' ? '' : 'font-'}#{property_name}:#{property.value}" }.join(';')
+        @properties.map { |property_name, property| "#{property_name == 'line-height' ? '' : 'font-'}#{property_name}:#{property.value if property}" }.join(';')
       end
     end
 
