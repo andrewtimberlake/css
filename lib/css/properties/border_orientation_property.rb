@@ -23,9 +23,11 @@ module CSS
 
       def default_properties
         @@default_properties ||= {
+          # I don't know border-size css property. Maybe width should be here?
           'size' => Property.new(self, 'size', '3px'),
           'style' => nil,
-          'color' => Property.new(self, 'color', 'black')
+          'color' => Property.new(self, 'color', 'black'),
+          'width' => Property.new(self, 'width', 'inherit'),
         }
       end
 
