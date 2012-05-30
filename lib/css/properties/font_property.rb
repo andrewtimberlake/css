@@ -1,7 +1,9 @@
 module CSS
   class FontProperty < Property
+    attr_reader :name
+    
     def name
-      'font'
+      @name ||= 'font'
     end
 
     def to_style
@@ -30,6 +32,7 @@ module CSS
           @properties['line-height'] = Property.new(:p, 'line-height', value)
         elsif name =~ /-/
           property_name = name.sub(/[^-]+-(.*)/, '\1')
+          @name = name
           @properties[property_name] = Property.new(self, property_name, value)
         else
           expand_property value if value
