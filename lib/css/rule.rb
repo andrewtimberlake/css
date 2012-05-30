@@ -30,7 +30,7 @@ module CSS
 
     def get(property_name)
       property_name = normalize_property_name(property_name)
-      if property_name =~ /-/
+      if property_name =~ /-/ && !property_name.start_with?('font-')
         property_name_parts = property_name.split('-')
         pname = property_name_parts.shift
         property = nil
